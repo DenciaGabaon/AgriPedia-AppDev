@@ -6,8 +6,8 @@ import 'package:carousel_slider/carousel_controller.dart';
 
 
 void main() {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  //WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  //FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(const AgriPedia());
 }
 
@@ -26,7 +26,17 @@ class AgriPedia extends StatelessWidget {
         // '/third': (context) => Camera(),
         // Define a named route for SecondScreen
       },
-     // home: const MyWelcomePage(),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('AgriPedia'), // Add your title here
+        ),
+        body: const Center(
+          child: Text(
+            'Hello, AgriPedia!', // Your text goes here
+            style: TextStyle(fontSize: 24),
+          ),
+        ),
+      ),
     );
   }
 }
