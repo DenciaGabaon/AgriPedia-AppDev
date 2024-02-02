@@ -22,6 +22,7 @@ class MyHomePage extends StatefulWidget {
 class Home extends State<MyHomePage>{
   @override
   Widget build(BuildContext context) {
+    // Code
     return Scaffold(
       backgroundColor: Colors.white, //Color.fromRGBO(245, 245, 219, 1),
       appBar: AppBar(
@@ -39,61 +40,98 @@ class Home extends State<MyHomePage>{
         centerTitle: false,
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
-        /*title: const Text('AgriPedia'),
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        backgroundColor: Colors.red,*/
       ),
-      /*body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(18, 18, 18, 18),
-          child: Align(
-            alignment: Alignment.topCenter,
-          child: Container(
-            padding: EdgeInsets.all(15.0),
-            decoration: BoxDecoration(
-              color: Colors.green,
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            width: 500,
-            height: 165,
+      body: Column(
+      children: [
+        Container(
+          width: 500,
+          height: 150,
+          padding: const EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.0)
-                  ),
-                  width: 125,
-                  height: 150,
+            children: [
+              const SizedBox(width: 12),
+              buildCard(),
+              const SizedBox(width: 12),
+              buildCard(),
+              const SizedBox(width: 12),
+              buildCard(),
+              const SizedBox(width: 12),
+              buildCard(),
+              const SizedBox(width: 12)
+            ],
+          ),
+          ),
+        ),
+            const SizedBox(height: 12),
+          Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(20.0),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.0)
-                  )
+                  width: 390,
+                  height: 230,
+                  padding: const EdgeInsets.all(10.0),
+                child: ListView(
+                  scrollDirection: Axis.vertical,
+                  children: [
+                    buildTask(),
+                    const SizedBox(height: 12),
+                    buildTask(),
+                    const SizedBox(height: 12),
+                    buildTask(),
+                    const SizedBox(height: 12),
+                    buildTask(),
+                    const SizedBox(height: 12)
+                  ],
                 ),
-              ],
-            )
+              ),
+            ],
+          ),
+        const SizedBox(height: 15),
+        Column(
+          children: [
+            Container(
+              width: 380,
+              height: 145,
+              padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                color: Colors.grey,
+                borderRadius: BorderRadius.circular(20.0)
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 15),
+        SizedBox(
+          width: 190,
+          height: 50,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/second');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+            ),
+            child: const Text(
+              'Add Crop',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontFamily: 'Lato',
+                fontStyle: FontStyle.normal,
+              ),
             ),
           ),
         ),
-      ),*/
-      body: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-        children: [
-          const SizedBox(width: 12),
-          buildCard(),
-          const SizedBox(width: 12),
-          buildCard(),
-          const SizedBox(width: 12),
-          buildCard(),
-          const SizedBox(width: 12),
-          buildCard(),
-          const SizedBox(width: 12)
-        ],
-      ),
+      ],
       ),
     );
   }
@@ -108,8 +146,7 @@ class Home extends State<MyHomePage>{
       children: [
         const Padding(padding: EdgeInsets.all(3.0)),
         Image.asset('assets/tomatoes.png'),
-        const Text(
-          'Tomato Tornado',
+        const Text('Tomato Uno',
           style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
         ),
         const Text(
@@ -122,8 +159,30 @@ class Home extends State<MyHomePage>{
             color: Colors.lightGreen,
             borderRadius: BorderRadius.circular(20.0)
           ),
+          child: const Text(
+            'Good',
+            style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
         ),
       ],
     )
+  );
+
+  Widget buildTask() => Container(
+    width: 380,
+    height: 54,
+    padding: const EdgeInsets.all(10.0),
+    decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20.0)
+    ),
+    child: Row(
+      children: [
+        Image.asset('assets/tomatoes.png'),
+        SizedBox(width: 12.0),
+        Text("Tomato Uno needs watering!"),
+      ],
+    ),
   );
 }
