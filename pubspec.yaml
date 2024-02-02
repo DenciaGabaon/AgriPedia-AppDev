@@ -42,6 +42,9 @@ dependencies:
   flutter_native_splash: ^2.3.10
   persistent_bottom_nav_bar: ^4.0.2
   flutter_launcher_icons: ^0.13.1
+  flutter_svg: ^2.0.9
+  #another_carousel_pro: ^1.0.2
+
 
 flutter_native_splash:
     color: "000000"
@@ -84,8 +87,20 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-     - assets/HomeNav.svg
      - assets/logo.png
+     - assets/bg-welcome.svg
+     - assets/bg-gradient.png
+     - assets/Analysis-grey.svg
+     - assets/Analysis-green.svg
+     - assets/Home-grey.svg
+     - assets/Home-green.svg
+     - assets/Cropedia-grey.svg
+     - assets/Cropedia-Green.svg
+     - assets/Cropedia-Tomato1.png
+     - assets/Cropedia-Tomato2.png
+     - assets/Cropedia-Tomato3.png
+
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

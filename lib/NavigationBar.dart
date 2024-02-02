@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'HomePage.dart';
 import 'package:agripedia/AnalysisPage.dart';
@@ -28,20 +29,28 @@ class NavigationBar extends State<MyNavigation>{
       bottomNavigationBar :  BottomNavigationBar(
         backgroundColor: Colors.white,
         currentIndex: Myindex,
-        type: BottomNavigationBarType.fixed,
-        items:  const [
+        //type: BottomNavigationBarType.fixed,
+        items:   [
           BottomNavigationBarItem(
-              icon:   Icon(Icons.palette_outlined),//Image.asset('assets/HomeNav.svg',),
-              activeIcon: Icon(Icons.home_filled,), //Image.asset('assets/icon _home_.png',),
+              icon: Container(
+                width: 35, // Adjust the width as needed
+                height: 31, // Adjust the height as needed
+                child: SvgPicture.asset('assets/Home-grey.svg'),
+              ),//SvgPicture.asset('assets/Home-grey.svg',),//Image.asset('assets/Home-grey.png'),
+              activeIcon: Container(
+                width: 35, // Adjust the width as needed
+                height: 31, // Adjust the height as needed
+                child: SvgPicture.asset('assets/Home-green.svg'),
+              ),//SvgPicture.asset('assets/Home-green.svg',),
               label: 'Home'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.palette_outlined),//Image.asset('assets/emoji _artist palette_.png', ),
-              activeIcon: Icon(Icons.palette),//Image.asset('assets/palette_filled.png',),
-              label: 'Paintings'),
+              icon: SvgPicture.asset('assets/Analysis-grey.svg', ),
+              activeIcon: SvgPicture.asset('assets/Analysis-green.svg',),
+              label: 'Analysis'),
           BottomNavigationBarItem(
-                 icon:  Icon(Icons.help_outline, ),
-                 activeIcon: Icon(Icons.help, ),
-                 label: 'Help'),
+                 icon:  SvgPicture.asset('assets/Cropedia-grey.svg', ),
+                 activeIcon: SvgPicture.asset('assets/Cropedia-Green.svg', ),
+                 label: 'Cropedia'),
         ],
         onTap: (index) {
           setState(() {
@@ -49,16 +58,21 @@ class NavigationBar extends State<MyNavigation>{
           }
           );
         },
-        selectedItemColor: const Color.fromRGBO(66, 103, 178, 1),
-        unselectedItemColor: const Color.fromRGBO(66, 103, 178, 1),
-        iconSize: 35,
+
+        selectedItemColor: const Color.fromRGBO(0, 105, 46, 1),
+        unselectedItemColor: const Color.fromRGBO(175, 183, 187, 1),
+
         selectedLabelStyle: const TextStyle(
-          fontSize: 16, // Set the font size for the selected label
-          fontFamily: 'Montserrat', // Set your desired font family for the selected label
+          fontSize: 12, // Set the font size for the selected label
+          fontFamily: 'Lato',
+          fontWeight: FontWeight.w400,
+        //  color: Color.fromRGBO(0, 105, 46, 1),// Set your desired font family for the selected label
         ),
         unselectedLabelStyle: const TextStyle(
-          fontSize: 14, // Set the font size for the unselected label
-          fontFamily: 'Montserrat', // Set your desired font family for the unselected label
+            fontSize: 12, // Set the font size for the selected label
+            fontFamily: 'Lato',
+            fontWeight: FontWeight.w400,
+          //  color: Color.fromRGBO(175, 183, 187, 1),// Set your desired font family for the unselected label
         ),
       ),
 
