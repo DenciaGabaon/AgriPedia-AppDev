@@ -68,7 +68,6 @@ class _MyWelcomePageState extends State<MyWelcomePage> {
                   style: TextStyle(
                       fontSize: 20,
                       color: Color.fromRGBO(0, 0, 0, 1)
-
                   ),
                 ),
               ),
