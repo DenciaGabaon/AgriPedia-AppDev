@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CropInfo extends StatelessWidget {
-  const CropInfo({Key? key});
+  const CropInfo({super.key, Key});
 
   @override
   Widget build(BuildContext context) {

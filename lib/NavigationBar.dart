@@ -29,16 +29,16 @@ class NavigationBar extends State<MyNavigation>{
         backgroundColor: Colors.white,
         currentIndex: Myindex,
         type: BottomNavigationBarType.fixed,
-        items:  [
+        items:  const [
           BottomNavigationBarItem(
-              icon:  Image.asset('assets/HomeNav.svg',),
-              activeIcon: const Icon(Icons.home_filled,), //Image.asset('assets/icon _home_.png',),
+              icon:   Icon(Icons.palette_outlined),//Image.asset('assets/HomeNav.svg',),
+              activeIcon: Icon(Icons.home_filled,), //Image.asset('assets/icon _home_.png',),
               label: 'Home'),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
               icon: Icon(Icons.palette_outlined),//Image.asset('assets/emoji _artist palette_.png', ),
               activeIcon: Icon(Icons.palette),//Image.asset('assets/palette_filled.png',),
               label: 'Paintings'),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
                  icon:  Icon(Icons.help_outline, ),
                  activeIcon: Icon(Icons.help, ),
                  label: 'Help'),
@@ -50,7 +50,7 @@ class NavigationBar extends State<MyNavigation>{
           );
         },
         selectedItemColor: const Color.fromRGBO(66, 103, 178, 1),
-        unselectedItemColor: Color.fromRGBO(66, 103, 178, 1),
+        unselectedItemColor: const Color.fromRGBO(66, 103, 178, 1),
         iconSize: 35,
         selectedLabelStyle: const TextStyle(
           fontSize: 16, // Set the font size for the selected label

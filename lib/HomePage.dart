@@ -2,10 +2,8 @@
 //TO DO maintain navigation bar while routing to another page of home page
 //another route for page 1 og home page for displaying painting sample pictures.
 
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 //import 'package:permission_handler/permission_handler.dart';
 //import 'package:tflite_flutter/tflite_flutter.dart'
 
