@@ -32,12 +32,12 @@ class NavigationBar extends State<MyNavigation>{
         //type: BottomNavigationBarType.fixed,
         items:   [
           BottomNavigationBarItem(
-              icon: Container(
+              icon: SizedBox(
                 width: 35, // Adjust the width as needed
                 height: 31, // Adjust the height as needed
                 child: SvgPicture.asset('assets/Home-grey.svg'),
               ),//SvgPicture.asset('assets/Home-grey.svg',),//Image.asset('assets/Home-grey.png'),
-              activeIcon: Container(
+              activeIcon: SizedBox(
                 width: 35, // Adjust the width as needed
                 height: 31, // Adjust the height as needed
                 child: SvgPicture.asset('assets/Home-green.svg'),

@@ -43,6 +43,7 @@ dependencies:
   persistent_bottom_nav_bar: ^4.0.2
   flutter_launcher_icons: ^0.13.1
   flutter_svg: ^2.0.9
+  dots_indicator: ^3.0.0
   #another_carousel_pro: ^1.0.2
 
 
@@ -99,6 +100,9 @@ flutter:
      - assets/Cropedia-Tomato1.png
      - assets/Cropedia-Tomato2.png
      - assets/Cropedia-Tomato3.png
+     - assets/Cropedia-Sili1.png
+     - assets/Cropedia-Sili2.png
+     - assets/Cropedia-Sili3.png
 
 
 

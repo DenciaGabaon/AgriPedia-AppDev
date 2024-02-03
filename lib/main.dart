@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'NavigationBar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-//import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+
 
 
 
@@ -48,7 +48,7 @@ class _MyWelcomePageState extends State<MyWelcomePage> {
     super.initState();
 
     /// whenever your initialization is completed, remove the splash screen:
-    Future.delayed(Duration(seconds: 5)).then((value) => {
+    Future.delayed(const Duration(seconds: 5)).then((value) => {
       FlutterNativeSplash.remove()
     });
   }
@@ -87,7 +87,7 @@ class _MyWelcomePageState extends State<MyWelcomePage> {
                   color: Colors.white,
               )),
 
-               SizedBox(height: 25,),
+               const SizedBox(height: 25,),
                const Align(
                 alignment: Alignment.center,
                 child: SizedBox(
@@ -102,7 +102,7 @@ class _MyWelcomePageState extends State<MyWelcomePage> {
                   ),
                 )
               ),
-          SizedBox(height: 52.5),
+          const SizedBox(height: 52.5),
           SizedBox(
             width: 191,
             height: 51,
