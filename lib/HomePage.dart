@@ -15,6 +15,7 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
 // Lahat ng values na nagbabago ipapasok sa function, like text.
 // Pwedeng naka default ang container, and then yung laman is naka function.
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
@@ -23,6 +24,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class Home extends State<MyHomePage> {
+  List<CropData> crops = [
+    CropData(name: "tomato1", status: "online", condition: "good"),
+    CropData(name: "tomato2", status: "offline", condition: "bad"),
+    CropData(name: "sili1", status: "online", condition: "good"),
+    CropData(name: "sili2", status: "offline", condition: "bad")
+    // Add more crops as needed
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -41,35 +49,10 @@ class Home extends State<MyHomePage> {
     );
   }
 
-  Widget cropSummary(){
-    // Code
-    String name = "tomato1";
-
-    if (name.isEmpty){
-      return Column(
-        children: [
-          Container(
-            width: 500,
-            height: 150,
-            padding: EdgeInsets.all(10.0),
-            decoration: BoxDecoration(
-              color: Colors.orange,
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: Center(
-              child: Text(
-                'No Crop Found,\nPlease Add a Crop First.',
-                textAlign: TextAlign.center,
-              ),
-            )
-          ),
-        ],
-      );
-    }
-
-    return Column(
-      children: [
-        Container(
+  Widget cropSummary() {
+    if (crops.isEmpty) {
+      return Center(
+        child: Container(
           width: 500,
           height: 150,
           padding: EdgeInsets.all(10.0),
@@ -77,19 +60,69 @@ class Home extends State<MyHomePage> {
             color: Colors.orange,
             borderRadius: BorderRadius.circular(20.0),
           ),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                Text('Hello I am $name')
-              ],
+          child: Center(
+            child: Text(
+              'No Crop Found,\nPlease Add a Crop First.',
+              textAlign: TextAlign.center,
             ),
           ),
         ),
-      ],
-    );
+      );
+    }
 
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: crops.map((crop) {
+          return getCrop(crop);
+        }).toList(),
+      ),
+    );
   }
+
+  Widget getCrop(CropData crop) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.green,
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      width: 130,
+      height: 130,// Adjust width as needed
+      margin: EdgeInsets.all(10.0), // Adjust margin as needed
+      child: Column(
+        children: [
+          Padding(padding: EdgeInsets.all(3.0)),
+          Image.asset('assets/tomatoes.png'),
+          Text(
+            '${crop.name}',
+            style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+          ),
+          Text('Status: ${crop.status}'),
+          Container(
+            height: 20,
+            width: 100,
+            decoration: BoxDecoration(
+              color: Colors.lightGreen,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Text(
+              crop.condition,
+              style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CropData {
+  final String name;
+  final String status;
+  final String condition;
+
+  CropData({required this.name, required this.status, required this.condition});
 }
 
 
