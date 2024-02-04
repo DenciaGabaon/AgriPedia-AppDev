@@ -23,6 +23,18 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => Home();
 }
 
+class CropData {
+  final String name;
+  final String status;
+  final String condition;
+
+  CropData({required this.name, required this.status, required this.condition});
+}
+
+class Task{
+
+}
+
 class Home extends State<MyHomePage> {
   List<CropData> crops = [
     CropData(name: "tomato1", status: "online", condition: "good"),
@@ -39,13 +51,25 @@ class Home extends State<MyHomePage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Agripedia'),
+            const Text('AgriPedia'),
+            SvgPicture.asset(
+              'assets/HomeNav.svg',
+              height: 30,
+            ),
+            const SizedBox(width:8),
           ],
         ),
+        centerTitle: false,
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.white,
       ),
-      body: cropSummary(),
+      body: Column(
+        children: [
+          cropSummary(),
+          SizedBox(height: 15),
+          taskList()
+        ],
+      )
     );
   }
 
@@ -55,12 +79,12 @@ class Home extends State<MyHomePage> {
         child: Container(
           width: 500,
           height: 150,
-          padding: EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(10.0),
           decoration: BoxDecoration(
             color: Colors.orange,
             borderRadius: BorderRadius.circular(20.0),
           ),
-          child: Center(
+          child: const Center(
             child: Text(
               'No Crop Found,\nPlease Add a Crop First.',
               textAlign: TextAlign.center,
@@ -78,36 +102,53 @@ class Home extends State<MyHomePage> {
         }).toList(),
       ),
     );
+
   }
 
   Widget getCrop(CropData crop) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.green,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2), // Shadow color
+            spreadRadius: 1, // Spread radius
+            blurRadius: 3, // Blur radius
+            offset: const Offset(0, 3), // Offset in the x, y direction
+          ),
+        ],
       ),
       width: 130,
       height: 130,// Adjust width as needed
-      margin: EdgeInsets.all(10.0), // Adjust margin as needed
+      margin: const EdgeInsets.all(10.0), // Adjust margin as needed
       child: Column(
         children: [
-          Padding(padding: EdgeInsets.all(3.0)),
+          const Padding(padding: EdgeInsets.all(3.0)),
           Image.asset('assets/tomatoes.png'),
           Text(
-            '${crop.name}',
-            style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+            crop.name,
+            style: const TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
           ),
           Text('Status: ${crop.status}'),
           Container(
             height: 20,
             width: 100,
             decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2), // Shadow color
+                  spreadRadius: 1, // Spread radius
+                  blurRadius: 3, // Blur radius
+                  offset: const Offset(0, 3), // Offset in the x, y direction
+                ),
+              ],
               color: Colors.lightGreen,
               borderRadius: BorderRadius.circular(20.0),
             ),
             child: Text(
               crop.condition,
-              style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.white),
+              style: const TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.white),
               textAlign: TextAlign.center,
             ),
           ),
@@ -115,14 +156,44 @@ class Home extends State<MyHomePage> {
       ),
     );
   }
-}
 
-class CropData {
-  final String name;
-  final String status;
-  final String condition;
+  Widget taskList(){
+    if (crops.isEmpty) {
+      return Center(
+        child: Container(
+          width: 450,
+          height: 150,
+          padding: const EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            color: Colors.orange,
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: const Center(
+            child: Text(
+              'Tasks Unavailable, Add A Crop First',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      );
+    }
 
-  CropData({required this.name, required this.status, required this.condition});
+    return Container(
+      width: 390,
+      height: 150,
+      padding: const EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        color: Colors.orange,
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: const Center(
+        child: Text(
+          'Task ng ina mo',
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
 }
 
 
