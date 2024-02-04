@@ -4,6 +4,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
@@ -12,6 +13,8 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 //import 'package:permission_handler/permission_handler.dart';
 //import 'package:tflite_flutter/tflite_flutter.dart'
 
+// Lahat ng values na nagbabago ipapasok sa function, like text.
+// Pwedeng naka default ang container, and then yung laman is naka function.
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
@@ -19,7 +22,78 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => Home();
 }
 
-class Home extends State<MyHomePage>{
+class Home extends State<MyHomePage> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Agripedia'),
+          ],
+        ),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.red,
+      ),
+      body: cropSummary(),
+    );
+  }
+
+  Widget cropSummary(){
+    // Code
+    String name = "tomato1";
+
+    if (name.isEmpty){
+      return Column(
+        children: [
+          Container(
+            width: 500,
+            height: 150,
+            padding: EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              color: Colors.orange,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Center(
+              child: Text(
+                'No Crop Found,\nPlease Add a Crop First.',
+                textAlign: TextAlign.center,
+              ),
+            )
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      children: [
+        Container(
+          width: 500,
+          height: 150,
+          padding: EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            color: Colors.orange,
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                Text('Hello I am $name')
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+
+  }
+}
+
+
+/*
   @override
   Widget build(BuildContext context) {
     // Code
@@ -106,6 +180,7 @@ class Home extends State<MyHomePage>{
                 color: Colors.grey,
                 borderRadius: BorderRadius.circular(20.0)
               ),
+              child: Text('hello World'),
             ),
           ],
         ),
@@ -185,4 +260,4 @@ class Home extends State<MyHomePage>{
       ],
     ),
   );
-}
+}*/
