@@ -31,9 +31,6 @@ class CropData {
   CropData({required this.name, required this.status, required this.condition});
 }
 
-class Task{
-
-}
 
 class Home extends State<MyHomePage> {
   List<CropData> crops = [
@@ -102,7 +99,6 @@ class Home extends State<MyHomePage> {
         }).toList(),
       ),
     );
-
   }
 
   Widget getCrop(CropData crop) {
@@ -179,18 +175,65 @@ class Home extends State<MyHomePage> {
     }
 
     return Container(
-      width: 390,
-      height: 150,
-      padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-        color: Colors.orange,
+        color: Colors.red,
         borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
-      child: const Center(
-        child: Text(
-          'Task ng ina mo',
-          textAlign: TextAlign.center,
+      width: 400,
+      height: 220,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: crops.map((crop)
+          {
+            return Column(
+              children: [
+                Padding(padding: EdgeInsets.all(5.0)),
+                getTask(crop),
+              ],
+            );
+            return getTask(crop);
+          }).toList(),
         ),
+      ),
+    );
+  }
+
+  Widget getTask(CropData crop){
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      width: 350,
+      height: 70,
+      child: Row(
+        children: [
+          Padding(padding: EdgeInsets.all(5.0)),
+          Text(
+            crop.name,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 15,
+              fontWeight: FontWeight.bold),
+            ),
+        ],
       ),
     );
   }
