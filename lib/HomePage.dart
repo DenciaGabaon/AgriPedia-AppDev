@@ -3,10 +3,13 @@
 //another route for page 1 og home page for displaying painting sample pictures.
 
 
+import 'package:agripedia/consts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+import 'package:weather/weather.dart';
+
 
 
 
@@ -33,6 +36,22 @@ class CropData {
 
 
 class Home extends State<MyHomePage> {
+  // weather
+  final WeatherFactory _wf = WeatherFactory(OPENWEATHER_API_KEY);
+
+  Weather? _weather;
+
+  @override
+  void initStateWeather(){
+    super.initState();
+    _wf.currentWeatherByCityName("Caloocan").then((w){
+      setState(() {
+        _weather = w;
+      });
+    });
+  }
+
+
   List<CropData> crops = [
     CropData(name: "tomato1", status: "online", condition: "good"),
     CropData(name: "tomato2", status: "offline", condition: "bad"),
@@ -63,8 +82,10 @@ class Home extends State<MyHomePage> {
       body: Column(
         children: [
           cropSummary(),
-          SizedBox(height: 15),
-          taskList()
+          const SizedBox(height: 15),
+          taskList(),
+          const SizedBox(height: 15),
+          weatherUI()
         ],
       )
     );
@@ -237,174 +258,61 @@ class Home extends State<MyHomePage> {
       ),
     );
   }
-}
 
-
-/*
-  @override
-  Widget build(BuildContext context) {
-    // Code
-    return Scaffold(
-      backgroundColor: Colors.white, //Color.fromRGBO(245, 245, 219, 1),
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('AgriPedia'),
-            SvgPicture.asset(
-              'assets/HomeNav.svg',
-              height: 30,
+  Widget weatherUI(){
+    if (_weather == null){
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.green,
+          borderRadius: BorderRadius.circular(20.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 3,
+              offset: const Offset(0, 3),
             ),
-            const SizedBox(width:8),
           ],
         ),
-        centerTitle: false,
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        width: 400,
+        height: 220,
+        child: const Row(
+          children: [
+            Text('Weather is not available.'),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.green,
+        borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0,3),
+          ),
+        ],
       ),
-      body: Column(
-      children: [
-        Container(
-          width: 500,
-          height: 150,
-          padding: const EdgeInsets.all(10.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-            children: [
-              const SizedBox(width: 12),
-              buildCard(),
-              const SizedBox(width: 12),
-              buildCard(),
-              const SizedBox(width: 12),
-              buildCard(),
-              const SizedBox(width: 12),
-              buildCard(),
-              const SizedBox(width: 12)
-            ],
-          ),
-          ),
-        ),
-            const SizedBox(height: 12),
-          Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                  width: 390,
-                  height: 230,
-                  padding: const EdgeInsets.all(10.0),
-                child: ListView(
-                  scrollDirection: Axis.vertical,
-                  children: [
-                    buildTask(),
-                    const SizedBox(height: 12),
-                    buildTask(),
-                    const SizedBox(height: 12),
-                    buildTask(),
-                    const SizedBox(height: 12),
-                    buildTask(),
-                    const SizedBox(height: 12)
-                  ],
-                ),
-              ),
-            ],
-          ),
-        const SizedBox(height: 15),
-        Column(
-          children: [
-            Container(
-              width: 380,
-              height: 145,
-              padding: const EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.circular(20.0)
-              ),
-              child: Text('hello World'),
-            ),
-          ],
-        ),
-        const SizedBox(height: 15),
-        SizedBox(
-          width: 190,
-          height: 50,
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/second');
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-            ),
-            child: const Text(
-              'Add Crop',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontFamily: 'Lato',
-                fontStyle: FontStyle.normal,
-              ),
-            ),
-          ),
-        ),
-      ],
+      width: 400,
+      height: 220,
+      child: Column(
+        children: [
+          _locationHeader(),
+        ],
       ),
     );
   }
-  Widget buildCard() => Container(
-    decoration: BoxDecoration(
-      color: Colors.green,
-      borderRadius: BorderRadius.circular(20.0)
-    ),
-    width: 125,
-    height: 125,
-    child: Column(
-      children: [
-        const Padding(padding: EdgeInsets.all(3.0)),
-        Image.asset('assets/tomatoes.png'),
-        const Text('Tomato Uno',
-          style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
-        ),
-        const Text(
-          'Status: Online'
-        ),
-        Container(
-          height: 20,
-          width: 100,
-          decoration: BoxDecoration(
-            color: Colors.lightGreen,
-            borderRadius: BorderRadius.circular(20.0)
-          ),
-          child: const Text(
-            'Good',
-            style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ],
-    )
-  );
 
-  Widget buildTask() => Container(
-    width: 380,
-    height: 54,
-    padding: const EdgeInsets.all(10.0),
-    decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.0)
-    ),
-    child: Row(
-      children: [
-        Image.asset('assets/tomatoes.png'),
-        SizedBox(width: 12.0),
-        Text("Tomato Uno needs watering!"),
-      ],
-    ),
-  );
-}*/
+  Widget _locationHeader(){
+    return Text(_weather?.areaName ?? "not available",
+      style: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+  }
+}
