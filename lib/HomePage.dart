@@ -9,9 +9,12 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:weather/weather.dart';
-
-
-
+import 'package:agripedia/AddCrop.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:logger/logger.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:agripedia/main.dart';
 
 //import 'package:permission_handler/permission_handler.dart';
 //import 'package:tflite_flutter/tflite_flutter.dart'
@@ -44,12 +47,14 @@ class Home extends State<MyHomePage> {
   @override
   void initStateWeather(){
     super.initState();
-    _wf.currentWeatherByCityName("Caloocan").then((w){
+    _wf.currentWeatherByCityName("Philadelphia").then((w){
       setState(() {
         _weather = w;
       });
     });
   }
+
+
 
 
   List<CropData> crops = [
@@ -85,7 +90,9 @@ class Home extends State<MyHomePage> {
           const SizedBox(height: 15),
           taskList(),
           const SizedBox(height: 15),
-          weatherUI()
+          weatherUI(),
+          const SizedBox(height: 15),
+          addCrop(),
         ],
       )
     );
@@ -275,10 +282,10 @@ class Home extends State<MyHomePage> {
           ],
         ),
         width: 400,
-        height: 220,
+        height: 180,
         child: const Row(
           children: [
-            Text('Weather is not available.'),
+            Text('ayaw gumana weather is null'),
           ],
         ),
       );
@@ -314,5 +321,31 @@ class Home extends State<MyHomePage> {
         fontWeight: FontWeight.w500,
       ),
     );
+  }
+
+  Widget addCrop(){
+    return SizedBox(
+        width: 180,
+        height: 50,
+        child:ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddCrop()),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromRGBO(0, 105, 46, 1),
+          ),
+          child: const Text('Add Crop',
+              style: TextStyle(
+                  color: Colors.white,//Color.fromRGBO(0, 0, 0, 1),
+                  fontSize: 14,
+                  fontFamily: 'Lato',
+                  fontWeight: FontWeight.w700,
+                  fontStyle: FontStyle.normal
+              )),
+        ),
+      );
   }
 }

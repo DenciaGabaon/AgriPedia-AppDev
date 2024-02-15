@@ -42,6 +42,9 @@ dependencies:
   flutter_native_splash: ^2.3.10
   persistent_bottom_nav_bar: ^4.0.2
   flutter_launcher_icons: ^0.13.1
+  weather: ^3.1.1
+  intl: ^0.19.0
+
 
 flutter_native_splash:
     color: "000000"
@@ -63,8 +66,8 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_svg: ^2.0.9
   flutter_svg_provider: ^1.0.7
-  weather: ^3.1.1
-  intl: ^0.19.0
+  firebase_core: ^2.25.4
+  firebase_database: ^10.4.5
 
 
 
@@ -92,6 +95,7 @@ flutter:
      - assets/logo.png
      - assets/tomato.svg
      - assets/tomatoes.png
+     - assets/sili.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -50,21 +50,21 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBBOrqYjM7UZjnEuHLQQKDm-rE7ooNsngo',
-    appId: '1:623067127966:android:eac303a7f5d13911351b8f',
-    messagingSenderId: '623067127966',
-    projectId: 'agripedia-18ccd',
-    databaseURL: 'https://agripedia-18ccd-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'agripedia-18ccd.appspot.com',
+    apiKey: 'AIzaSyBZtxHczuQ7xjzp-PZizXpumyvQAeBR2cs',
+    appId: '1:432764405515:android:6f666f9c13978904b0840e',
+    messagingSenderId: '432764405515',
+    projectId: 'agripedia-c5439',
+    databaseURL: 'https://agripedia-c5439-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'agripedia-c5439.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBhrzmjuXGGVgiqe6jY_Dfs4DbVo9LJLP0',
-    appId: '1:623067127966:ios:20dca8568e90b04e351b8f',
-    messagingSenderId: '623067127966',
-    projectId: 'agripedia-18ccd',
-    databaseURL: 'https://agripedia-18ccd-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'agripedia-18ccd.appspot.com',
+    apiKey: 'AIzaSyAeYJOjcDe2DKv8Kt3SyRC5VTpnxpGePHM',
+    appId: '1:432764405515:ios:1aa5d9f3f2fdd8c3b0840e',
+    messagingSenderId: '432764405515',
+    projectId: 'agripedia-c5439',
+    databaseURL: 'https://agripedia-c5439-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'agripedia-c5439.appspot.com',
     iosBundleId: 'com.example.agripedia.agripedia',
   );
 }

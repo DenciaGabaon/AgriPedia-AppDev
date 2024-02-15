@@ -1,14 +1,14 @@
 {
   "project_info": {
-    "project_number": "623067127966",
-    "firebase_url": "https://agripedia-18ccd-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "agripedia-18ccd",
-    "storage_bucket": "agripedia-18ccd.appspot.com"
+    "project_number": "432764405515",
+    "firebase_url": "https://agripedia-c5439-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "agripedia-c5439",
+    "storage_bucket": "agripedia-c5439.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:623067127966:android:eac303a7f5d13911351b8f",
+        "mobilesdk_app_id": "1:432764405515:android:6f666f9c13978904b0840e",
         "android_client_info": {
           "package_name": "com.example.agripedia.agripedia"
         }
@@ -16,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBBOrqYjM7UZjnEuHLQQKDm-rE7ooNsngo"
+          "current_key": "AIzaSyBZtxHczuQ7xjzp-PZizXpumyvQAeBR2cs"
         }
       ],
       "services": {
@@ -27,15 +27,15 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:623067127966:android:0789cc6a1fae2acd351b8f",
+        "mobilesdk_app_id": "1:432764405515:android:c89f499897939cd6b0840e",
         "android_client_info": {
-          "package_name": "com.example.flutterpractice"
+          "package_name": "com.example.demo"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBBOrqYjM7UZjnEuHLQQKDm-rE7ooNsngo"
+          "current_key": "AIzaSyBZtxHczuQ7xjzp-PZizXpumyvQAeBR2cs"
         }
       ],
       "services": {
