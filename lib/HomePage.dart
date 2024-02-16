@@ -54,9 +54,6 @@ class Home extends State<MyHomePage> {
     });
   }
 
-
-
-
   List<CropData> crops = [
     CropData(name: "tomato1", status: "online", condition: "good"),
     CropData(name: "tomato2", status: "offline", condition: "bad"),
@@ -285,7 +282,7 @@ class Home extends State<MyHomePage> {
         height: 180,
         child: const Row(
           children: [
-            Text('ayaw gumana weather is null'),
+            Text('weahter is unavailable'),
           ],
         ),
       );

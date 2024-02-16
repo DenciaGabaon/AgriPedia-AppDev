@@ -1,6 +1,7 @@
 import 'package:agripedia/HomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:agripedia/SelectCrop.dart';
 
 class AddCrop extends StatefulWidget {
   const AddCrop({Key? key}) : super(key: key);
@@ -63,7 +64,7 @@ class AddCropState extends State<AddCrop>{
                 onPressed: (){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MyHomePage())
+                    MaterialPageRoute(builder: (context) => SelectCrop()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
