@@ -248,6 +248,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.15.4"
+  http:
+    dependency: transitive
+    description:
+      name: http
+      sha256: a2bbf9d017fcced29139daa8ed2bba4ece450ab222871df93ca9eec6f80c34ba
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
+  http_parser:
+    dependency: transitive
+    description:
+      name: http_parser
+      sha256: "2aa08ce0341cc9b354a498388e30986515406668dbcc4f7c950c3e715496693b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.2"
   image:
     dependency: transitive
     description:
@@ -256,6 +272,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.4"
+  intl:
+    dependency: "direct main"
+    description:
+      name: intl
+      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.19.0"
   js:
     dependency: transitive
     description:
@@ -312,6 +336,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
+  mobile_scanner:
+    dependency: "direct main"
+    description:
+      name: mobile_scanner
+      sha256: "619ed5fd43ca9007a151f00c3dc43feedeaf235fe5647735d0237c38849d49dc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
   path:
     dependency: transitive
     description:
@@ -461,6 +493,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  weather:
+    dependency: "direct main"
+    description:
+      name: weather
+      sha256: "5ad1d5b77051aa524049fc0abf1076ac4533e91e0176b0a4bab1182a2d6f921b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
   web:
     dependency: transitive
     description:
@@ -487,4 +527,4 @@ packages:
     version: "3.1.2"
 sdks:
   dart: ">=3.2.6 <4.0.0"
-  flutter: ">=3.7.0-0"
+  flutter: ">=3.13.0"

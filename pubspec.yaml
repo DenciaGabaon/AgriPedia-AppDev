@@ -44,15 +44,16 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_svg: ^2.0.9
   dots_indicator: ^3.0.0
-  #another_carousel_pro: ^1.0.2
-
+  weather: ^3.1.1
+  intl: ^0.19.0
+  #qr_code_scanner: ^1.0.1
+  mobile_scanner: ^4.0.0
 
 flutter_native_splash:
-    color: "000000"
-    image: "assets/logo.png"
-    android: true
-    ios: true
-
+  color: "000000"
+  image: "assets/logo.png"
+  android: true
+  ios: true
 
 
 dev_dependencies:
@@ -93,6 +94,10 @@ flutter:
      - assets/bg-gradient.png
      - assets/Analysis-grey.svg
      - assets/Analysis-green.svg
+     - assets/Analysis-humid.png
+     - assets/Analysis-sun.png
+     - assets/Analysis-temp.png
+     - assets/Analysis-water.png
      - assets/Home-grey.svg
      - assets/Home-green.svg
      - assets/Cropedia-grey.svg
@@ -103,6 +108,8 @@ flutter:
      - assets/Cropedia-Sili1.png
      - assets/Cropedia-Sili2.png
      - assets/Cropedia-Sili3.png
+     - assets/Logo-appbar.svg
+
 
 
 
@@ -126,11 +133,14 @@ flutter:
             weight: 400
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+     - family: Inter
+       fonts:
+         - asset: fonts/Inter-Black.ttf
+           weight: 900
+         - asset: fonts/Inter-Medium.ttf
+           weight: 400
+         - asset: fonts/Inter-SemiBold.ttf
+           weight: 500
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

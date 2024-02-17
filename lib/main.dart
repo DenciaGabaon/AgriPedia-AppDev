@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'NavigationBar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'firebase_options.dart';
+//import 'package:firebase_core/firebase_core.dart';
+//import 'package:firebase_database/firebase_database.dart';
 
 
 
 
-void main() {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+Future<void> main() async {
+  //WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  //FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+ // await Firebase.initializeApp(
+   // options: DefaultFirebaseOptions.currentPlatform,
+  //);
   runApp(const AgriPedia());
 }
 

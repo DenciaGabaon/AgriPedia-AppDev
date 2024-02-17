@@ -1,8 +1,9 @@
+import 'package:agripedia/Dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'HomePage.dart';
-import 'package:agripedia/AnalysisPage.dart';
+import 'package:agripedia/Dashboard.dart';
 import 'Cropedia.dart';
 
 
