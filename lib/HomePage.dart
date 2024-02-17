@@ -2,8 +2,6 @@
 //TO DO maintain navigation bar while routing to another page of home page
 //another route for page 1 og home page for displaying painting sample pictures.
 
-
-import 'package:agripedia/consts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,6 +13,7 @@ import 'firebase_options.dart';
 import 'package:logger/logger.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:agripedia/main.dart';
+import 'package:agripedia/WeatherPage.dart';
 
 //import 'package:permission_handler/permission_handler.dart';
 //import 'package:tflite_flutter/tflite_flutter.dart'
@@ -40,25 +39,12 @@ class CropData {
 
 class Home extends State<MyHomePage> {
   // weather
-  final WeatherFactory _wf = WeatherFactory(OPENWEATHER_API_KEY);
-
-  Weather? _weather;
-
-  @override
-  void initStateWeather(){
-    super.initState();
-    _wf.currentWeatherByCityName("Philadelphia").then((w){
-      setState(() {
-        _weather = w;
-      });
-    });
-  }
 
   List<CropData> crops = [
-    CropData(name: "tomato1", status: "online", condition: "good"),
-    CropData(name: "tomato2", status: "offline", condition: "bad"),
-    CropData(name: "sili1", status: "online", condition: "good"),
-    CropData(name: "sili2", status: "offline", condition: "bad")
+    CropData(name: "Crop 1", status: "online", condition: "good"),
+    CropData(name: "Crop 2", status: "offline", condition: "bad"),
+    CropData(name: "Crop 3", status: "online", condition: "good"),
+    CropData(name: "Crop 4", status: "offline", condition: "bad")
     // Add more crops as needed
   ];
 
@@ -87,7 +73,7 @@ class Home extends State<MyHomePage> {
           const SizedBox(height: 15),
           taskList(),
           const SizedBox(height: 15),
-          weatherUI(),
+          WeatherPage(),
           const SizedBox(height: 15),
           addCrop(),
         ],
@@ -103,7 +89,7 @@ class Home extends State<MyHomePage> {
           height: 150,
           padding: const EdgeInsets.all(10.0),
           decoration: BoxDecoration(
-            color: Colors.orange,
+            color: Colors.greenAccent,
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: const Center(
@@ -186,7 +172,7 @@ class Home extends State<MyHomePage> {
           height: 150,
           padding: const EdgeInsets.all(10.0),
           decoration: BoxDecoration(
-            color: Colors.orange,
+            color: Colors.greenAccent,
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: const Center(
@@ -201,7 +187,7 @@ class Home extends State<MyHomePage> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.red,
+        color: Colors.lightGreen,
         borderRadius: BorderRadius.circular(20.0),
         boxShadow: [
           BoxShadow(
@@ -262,32 +248,7 @@ class Home extends State<MyHomePage> {
       ),
     );
   }
-
-  Widget weatherUI(){
-    if (_weather == null){
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.green,
-          borderRadius: BorderRadius.circular(20.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 3,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        width: 400,
-        height: 180,
-        child: const Row(
-          children: [
-            Text('weahter is unavailable'),
-          ],
-        ),
-      );
-    }
-
+    Widget weatherUI(){
     return Container(
       decoration: BoxDecoration(
         color: Colors.green,
@@ -302,23 +263,22 @@ class Home extends State<MyHomePage> {
         ],
       ),
       width: 400,
-      height: 220,
+      height: 180,
       child: Column(
         children: [
-          _locationHeader(),
+          Text(
+            'This is for Weather',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontFamily: 'Lato',
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _locationHeader(){
-    return Text(_weather?.areaName ?? "not available",
-      style: const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w500,
-      ),
-    );
-  }
 
   Widget addCrop(){
     return SizedBox(
@@ -332,7 +292,7 @@ class Home extends State<MyHomePage> {
             );
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromRGBO(0, 105, 46, 1),
+            backgroundColor: Colors.lightGreen,
           ),
           child: const Text('Add Crop',
               style: TextStyle(

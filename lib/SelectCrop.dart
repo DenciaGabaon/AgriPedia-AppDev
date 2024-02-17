@@ -37,7 +37,7 @@ class SelectCropState extends State<SelectCrop>{
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Name your Tomato',
+              'Name your Crop',
               style: TextStyle(
                 color: Colors.black,
                 fontFamily: 'Lato',
@@ -69,6 +69,7 @@ class SelectCropState extends State<SelectCrop>{
                 border: OutlineInputBorder(),
               ),
             ),
+            SizedBox(height: 100),
           ],
         ),
       ),
