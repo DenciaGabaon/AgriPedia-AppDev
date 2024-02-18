@@ -72,6 +72,10 @@ dev_dependencies:
   flutter_svg_provider: ^1.0.7
   firebase_core: ^2.25.4
   firebase_database: ^10.4.5
+  http: ^1.2.0
+  geocoding: ^2.1.1
+  geolocator: ^11.0.0
+  permission_handler: ^11.3.0
 
 
 

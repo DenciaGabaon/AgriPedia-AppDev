@@ -12,6 +12,7 @@ void main() async{
 class AgriPedia extends StatelessWidget {
   const AgriPedia({super.key});
 
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
