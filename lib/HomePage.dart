@@ -187,7 +187,7 @@ class Home extends State<MyHomePage> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.lightGreen,
+        color: Colors.white10,
         borderRadius: BorderRadius.circular(20.0),
         boxShadow: [
           BoxShadow(
@@ -251,7 +251,7 @@ class Home extends State<MyHomePage> {
     Widget weatherUI(){
     return Container(
       decoration: BoxDecoration(
-        color: Colors.green,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20.0),
         boxShadow: [
           BoxShadow(

@@ -69,6 +69,30 @@ class SelectCropState extends State<SelectCrop>{
                 border: OutlineInputBorder(),
               ),
             ),
+          SizedBox(height: 20),
+          SizedBox(
+            width: 180,
+            height: 50,
+            child:ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyHomePage()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.lightGreen,
+              ),
+              child: const Text('Add Crop',
+                  style: TextStyle(
+                      color: Colors.white,//Color.fromRGBO(0, 0, 0, 1),
+                      fontSize: 14,
+                      fontFamily: 'Lato',
+                      fontWeight: FontWeight.w700,
+                      fontStyle: FontStyle.normal
+                  )),
+            ),
+    ),
             SizedBox(height: 100),
           ],
         ),

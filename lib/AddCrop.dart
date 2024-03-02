@@ -105,7 +105,7 @@ class AddCropState extends State<AddCrop>{
                   onPressed: (){
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MyHomePage())
+                        MaterialPageRoute(builder: (context) => SelectCrop())
                     );
                   },
                   style: ElevatedButton.styleFrom(
