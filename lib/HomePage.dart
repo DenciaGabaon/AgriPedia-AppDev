@@ -38,8 +38,7 @@ class CropData {
 
 
 class Home extends State<MyHomePage> {
-  // weather
-
+//
   List<CropData> crops = [
     CropData(name: "Crop 1", status: "online", condition: "good"),
     CropData(name: "Crop 2", status: "offline", condition: "bad"),
@@ -47,6 +46,22 @@ class Home extends State<MyHomePage> {
     CropData(name: "Crop 4", status: "offline", condition: "bad")
     // Add more crops as needed
   ];
+  //database
+  String _liveData = '';
+
+  final DatabaseReference _database = FirebaseDatabase.instance.ref(
+    "nodemCU-board-tomato");
+
+  @override
+  void initState(){
+    super.initState();
+    // listener
+    _database.child('2024-2-16/20:49:59').onValue.listen((event){
+      setState(() {
+        _liveData = (event.snapshot.value ?? 'No Data Available').toString();
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
