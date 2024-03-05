@@ -1,7 +1,11 @@
 import 'dart:typed_data';
-
+import 'package:agripedia/AnalysisPage.dart';
+import 'package:agripedia/main.dart';
+import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:agripedia/NavigationBar.dart';
+
 
 class AddCrop extends StatefulWidget {
   const AddCrop({super.key});
@@ -11,6 +15,9 @@ class AddCrop extends StatefulWidget {
 }
 
 class AddCropState extends State<AddCrop> {
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,10 +46,36 @@ class AddCropState extends State<AddCrop> {
             print('Barcode found! ${barcode.rawValue}');
           }
           if (image != null) {
-            showDialog(
+            String? deviceID = barcodes.first.rawValue;
+            var logger = Logger();
+            logger.d("ID: $deviceID");
+
+            AnalysisState.addCropData(deviceID!);
+            Navigator.of(context).pop();
+
+
+           /* Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => MyNavigation(), // Navigate to MyNavigation first
+            )).then((_) {
+              // After navigating to MyNavigation, call setIndex
+              MyNavigation().setIndex(context, 1);
+            });*/
+            //NavigationBar.setIndex(1);
+
+
+
+            //_passer(deviceID!);
+
+
+            //  connectToHardware(Deviceid!);
+            /*showDialog(
               context: context,
               builder: (context) {
                 return AlertDialog(
+                  //pass id to connectToHardwareDBASE function
+                  //insdide the function, return all the retrieved data
+                  //from the id using streambuilder to add it ti list that
+                  // will hold all the data that will be displayed.
                   title: Text(
                     barcodes.first.rawValue ?? "",
                   ),
@@ -51,13 +84,22 @@ class AddCropState extends State<AddCrop> {
                   ),
                 );
               },
-            );
+            );*/
           }
         },
       ),
     );
   }
 }
+
+ /* void _passer(String deviceID) async {
+    var logger = Logger();
+    logger.d("$deviceID");
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => Analysis(deviceID: deviceID),
+    ));
+  }
+}*/
 
 
 

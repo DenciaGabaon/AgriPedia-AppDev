@@ -1,9 +1,9 @@
+import 'package:agripedia/AnalysisPage.dart';
 import 'package:agripedia/Dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'test.dart';
 import 'HomePage.dart';
-import 'package:agripedia/Dashboard.dart';
 import 'Cropedia.dart';
 
 
@@ -13,15 +13,30 @@ class MyNavigation extends StatefulWidget {
 
   @override
   State<MyNavigation> createState() => NavigationBar();
+
+  /*void setIndex(BuildContext context, int newIndex) {
+    NavigationBar state = context.findAncestorStateOfType<NavigationBar>()!;
+    state.setState(() {
+      state.Myindex = newIndex;
+    });
+  }*/
 }
 
 class NavigationBar extends State<MyNavigation>{
-  int Myindex = 0;
+    int Myindex = 0;
   List<Widget> widgetList = const [
     MyHomePage(),
-    Dashboard(),
+    Analysis(),
     CropInfo(),
+    FirebaseDataScreen(),
   ];
+
+  /*  void setIndex(int newIndex) {
+      setState(() {
+        Myindex = newIndex;
+      });
+    }*/
+  
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -52,6 +67,10 @@ class NavigationBar extends State<MyNavigation>{
                  icon:  SvgPicture.asset('assets/Cropedia-grey.svg', ),
                  activeIcon: SvgPicture.asset('assets/Cropedia-Green.svg', ),
                  label: 'Cropedia'),
+          BottomNavigationBarItem(
+              icon:  SvgPicture.asset('assets/Cropedia-grey.svg', ),
+              activeIcon: SvgPicture.asset('assets/Cropedia-Green.svg', ),
+              label: 'test'),
         ],
         onTap: (index) {
           setState(() {

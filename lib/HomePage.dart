@@ -5,16 +5,10 @@
 
 import 'package:agripedia/consts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:weather/weather.dart';
 
 import 'package:agripedia/AddCrop.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'package:logger/logger.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:agripedia/main.dart';
 
 //import 'package:permission_handler/permission_handler.dart';
 //import 'package:tflite_flutter/tflite_flutter.dart'
@@ -146,7 +140,7 @@ class Home extends State<MyHomePage> {
       child: Column(
         children: [
           const Padding(padding: EdgeInsets.all(3.0)),
-          Image.asset('assets/tomatoes.png'),
+          Image.asset('assets/Tomato.png'),
           Text(
             crop.name,
             style: const TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
@@ -221,7 +215,7 @@ class Home extends State<MyHomePage> {
           {
             return Column(
               children: [
-                Padding(padding: EdgeInsets.all(5.0)),
+                const Padding(padding: EdgeInsets.all(5.0)),
                 getTask(crop),
               ],
             );
@@ -250,10 +244,10 @@ class Home extends State<MyHomePage> {
       height: 70,
       child: Row(
         children: [
-          Padding(padding: EdgeInsets.all(5.0)),
+          const Padding(padding: EdgeInsets.all(5.0)),
           Text(
             crop.name,
-            style: TextStyle(
+            style: const TextStyle(
                 color: Colors.black,
                 fontSize: 15,
                 fontWeight: FontWeight.bold),
@@ -328,7 +322,7 @@ class Home extends State<MyHomePage> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AddCrop()),
+            MaterialPageRoute(builder: (context) => const AddCrop()),
           );
         },
         style: ElevatedButton.styleFrom(

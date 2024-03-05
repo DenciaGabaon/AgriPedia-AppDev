@@ -1,4 +1,3 @@
-import 'package:agripedia/HomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -30,7 +29,7 @@ class SelectCropState extends State<SelectCrop>{
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
       ),
-      body: Padding(
+      body: const Padding(
         padding: EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

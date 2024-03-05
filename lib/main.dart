@@ -3,21 +3,39 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'NavigationBar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'firebase_options.dart';
-//import 'package:firebase_core/firebase_core.dart';
-//import 'package:firebase_database/firebase_database.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:logger/logger.dart';
 
 
 
 
 Future<void> main() async {
-  //WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  //FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
- // await Firebase.initializeApp(
-   // options: DefaultFirebaseOptions.currentPlatform,
-  //);
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  //await readDataToFirebase('nodemCU-board-tomato/2024-2-17/00:04:28/temp');
   runApp(const AgriPedia());
 }
+
+//Working [/] - database is connected and working but without streambuilder.
+
+/*
+Future<void> readDataToFirebase(String userNum) async {
+  var logger = Logger();
+  DatabaseReference user = FirebaseDatabase.instance.ref(userNum);
+  try {
+    user.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      logger.d("Read successfully. Data read: $data");
+    });
+  } catch (e) {
+    logger.e("Error updating to Realtime Database: $e");
+  }
+}*/
+
 
 class AgriPedia extends StatelessWidget {
   const AgriPedia({super.key});
