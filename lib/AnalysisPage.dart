@@ -40,9 +40,19 @@ class CropData {
 }
 
 
+int findIndexByStringID(List<CropData> crops, String id) {
+  for (int i = 0; i < crops.length; i++) {
+    if (crops[i].devID == id) {
+      return i;
+    }
+  }
+  return -1; // ID not found
+}
+
 
 
 class AnalysisState extends State<Analysis> {
+  String ImagePath= '';
   /*late String id;
 
   @override
@@ -59,10 +69,21 @@ class AnalysisState extends State<Analysis> {
     //CropData(devID: "Tomato Tornado 2", name: "offline", plantedDate: "bad"),
   ];
 
-  get id => null;
+  //get id => null;
+
 
     static void addCropData(String id) {
       crops.add(CropData(devID: id, name: 'Edit name', plantedDate: 'plantedDate'));
+
+      /*int index = findIndexByStringID(crops, id);
+      if (index == -1){
+        //Means that ID is not found
+        crops.add(CropData(devID: id, name: 'Edit name', plantedDate: 'plantedDate'));
+      }
+      else{
+        //display alert dialog that says ID already scanned
+        return;
+      }*/
   }
 
 
@@ -154,6 +175,7 @@ class AnalysisState extends State<Analysis> {
   }
 
   Widget CropList(CropData crop){
+    ImagePath = path(crop.devID)!;
     return Container(
       padding: EdgeInsets.only(left: 20, right: 20),
       decoration: BoxDecoration(
@@ -172,10 +194,8 @@ class AnalysisState extends State<Analysis> {
       height: 90,
       child: Row(
         children: [
-
-          Image.asset('assets/Tomato.png'),
+          Image.asset(ImagePath, height: 50, width: 50,),
           SizedBox(width: 20,),
-       
           InkWell(
             onTap: () {
             // Handle the click event here
@@ -274,14 +294,25 @@ class AnalysisState extends State<Analysis> {
     );
   }
 
-   int findIndexByStringID(List<CropData> crops, String id) {
-     for (int i = 0; i < crops.length; i++) {
-       if (crops[i].devID == id) {
-         return i;
-       }
-     }
-     return -1; // ID not found
-   }
+  String? path(String id) {
+    String tomatopath = 'assets/Tomato.png';
+    String chilipath = 'assets/Chili.png';
+    // Sample input string
+    //String inputString = "This is a string containing the word tomato.";
+    // Check if the input string contains the word "tomato" or "chili"
+    if (id.toLowerCase().contains("tomato")) {
+      return tomatopath;
+    } else if (id.toLowerCase().contains("chili")) {
+      return chilipath;
+      /* } else {
+      print("Neither 'tomato' nor 'chili' found in the input string.");
+    }*/
+    }
+
+    return null;
+  }
+
+
 
   Widget Popuptrash(String id){
     return

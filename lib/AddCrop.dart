@@ -4,7 +4,9 @@ import 'package:agripedia/main.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:agripedia/NavigationBar.dart';
+import 'package:quickalert/quickalert.dart';
 
 
 class AddCrop extends StatefulWidget {
@@ -16,7 +18,7 @@ class AddCrop extends StatefulWidget {
 
 class AddCropState extends State<AddCrop> {
 
-
+  List<CropData> crops = AnalysisState.crops;
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +52,49 @@ class AddCropState extends State<AddCrop> {
             var logger = Logger();
             logger.d("ID: $deviceID");
 
-            AnalysisState.addCropData(deviceID!);
-            Navigator.of(context).pop();
+            DatabaseReference _database = FirebaseDatabase.instance.ref(deviceID);
+            try {
+              _database.onValue.listen((DatabaseEvent event) {
+                final data = event.snapshot.value;
+                if (data != null){
+                  int index = findIndexByStringID(crops, deviceID!);
+
+                  if (index == -1){
+                    //Means that ID is not found
+                    AnalysisState.addCropData(deviceID!);
+                    Navigator.of(context).pop();
+                  }
+                  else{
+                    logger.d("ID already scanned");
+                    Navigator.of(context).pop();
+                    QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.warning,
+                      title: 'Existing ID',
+                      text: 'ID is already used',
+                    );
+                  }
+                  //AnalysisState.addCropData(deviceID!);
+
+                }
+                else{
+
+                  logger.e("Error reading Realtime Database");
+                  Navigator.of(context).pop();
+                  QuickAlert.show(
+                    context: context,
+                    type: QuickAlertType.error,
+                    title: 'Invalid ID',
+                    text: 'No crop was found from the scanned ID.',
+                  );
+                }
+              });
+            } catch (e) {
+              logger.e("Error reading to Realtime Database: $e");
+              Navigator.of(context).pop();
+            }
+
+
 
 
            /* Navigator.of(context).push(MaterialPageRoute(

@@ -48,6 +48,8 @@ dependencies:
   intl: ^0.19.0
   #qr_code_scanner: ^1.0.1
   mobile_scanner: ^4.0.0
+  quickalert: ^1.0.2
+  syncfusion_flutter_charts: ^25.1.35
 
 flutter_native_splash:
   color: "000000"
@@ -113,6 +115,7 @@ flutter:
      - assets/Logo-appbar.svg
      - assets/Tomato.png
      - assets/Chili.png
+
 
 
 

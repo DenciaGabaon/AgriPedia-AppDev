@@ -6,6 +6,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:logger/logger.dart';
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'dart:ui' as ui;
 
 
 
@@ -18,13 +20,32 @@ class Dashboard extends StatefulWidget {
   State<Dashboard> createState() => DashboardState();
 }
 
+class CropStatus{
+
+   String year;
+   double sales = 0;
+
+  CropStatus(this.year, this.sales);
+
+}
+
+List<CropStatus> Cropchart = [
+  CropStatus('Jan', 10),
+  CropStatus('Feb', 30),
+  CropStatus('Mar', 50),
+  CropStatus('Apr', 70),
+  CropStatus('May', 20),
+
+];
+
 
 
 
 class DashboardState extends State<Dashboard> {
   final Logger logger = Logger();
   late String finalID = '';
-  String test = 'nodemCU-board-tomato';
+  late TooltipBehavior _tooltipBehavior;
+  String test = "nodemCU-board-tomato";
   late DatabaseReference _database;
   /*final DatabaseReference _database = FirebaseDatabase.instance.ref(
       "nodemCU-board-tomato");*/
@@ -32,7 +53,12 @@ class DashboardState extends State<Dashboard> {
   String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   String formattedTime = DateFormat('HH:mm:ss').format(DateTime.now());
 
+  //Var to String Holder
   late String _liveData = '';
+  late String _time = '';
+  late String _dates = '';
+
+  //Factors Holder
   late String _temperature = '';
   late String _temperature_raw = '';
   late String _humidity_raw = '';
@@ -41,36 +67,129 @@ class DashboardState extends State<Dashboard> {
   late String _soil = '';
   late String _lightIntensity_raw = '';
   late String _lightIntensity = '';
-  late List<String> dataVertical = [];
+
+  //List holder
+  late List<String> dataFactors = [];
+  late List<String> dataTime = [];
+  late List<String> dataDate = [];
+
+
+  late String latestTime_raw = '';
+  late String latestTime= '';
+  late String latestDate = '';
+  late String finalTime = '';
   bool loading = true;
 
 
   @override
   void initState() {
     super.initState();
+    _tooltipBehavior = TooltipBehavior(
+        enable: true,
+        borderColor: Colors.red,
+        borderWidth: 5,
+        color: Colors.lightBlue
+    );
     if (widget.id != null) {
       // If ID is passed, no need to show loading
       logger.d(widget.id);
       setState(() {
          finalID = widget.id!;
       });
+      //retrieve all the time in database - DONE
+      //identify the latest time
+      // get the identified time and connect it to the current date
+      //if current time has the same time in realtime database, then display.
+      //else, the displayed dashboard should remain the same with the current time.
+
 
       if (finalID.isNotEmpty) {
-        logger.d(finalID);
-        logger.d(test);
-         _database = FirebaseDatabase.instance.ref(test);
-         _database.child('2024-2-16/20:49:59').onValue.listen((event) {
-          _liveData = (event.snapshot.value ?? 'No data available').toString();
-          logger.d(_liveData);
-          if (_liveData == 'No data available'){
-            setState(() {
-              loading = false;
-            });
-          }
-          else{
-            Retrievedata(_liveData);
-          }
-        });
+        logger.d("finalid: $finalID");
+
+         _database = FirebaseDatabase.instance.ref(finalID);
+
+        //RETRIEVING DATE
+         _database.onValue.listen((event) {
+             var date = event.snapshot.value;
+             if(date != null && date is Map) {
+
+               setState(() {
+               var date_raw = date.keys.toList(); // Extracting the time stamps
+               logger.d("Data: $date");
+               logger.d("TS var: $date_raw");
+               date_raw.sort();
+               logger.d("Sorted var: $date_raw");
+               _dates = date_raw.join(', ');
+               logger.d("_dates string: $_dates");
+               dataDate = _dates.split(',').map((_dates) => _dates.trim()).toList();
+               logger.d("DD list: $dataDate");
+               latestDate = dataDate.last;
+               logger.d("LD: $latestDate");
+
+               //RETRIEVING TIME & FACTORS
+               _database.child(latestDate).onValue.listen((event) {
+                 setState(() {
+                   var time_raw = event.snapshot.value;
+                   if(time_raw != null && time_raw is Map) {
+
+                     var timeStamps = time_raw.keys.toList(); // Extracting the time stamps
+                     logger.d("Data: $time_raw");
+                     logger.d("TS var: $timeStamps");
+                     timeStamps.sort();
+                     logger.d("Sorted var: $timeStamps");
+                     _time = timeStamps.join(', ');
+                     logger.d("_dates string: $_dates");
+                     dataTime = _time.split(',').map((_time) => _time.trim()).toList();
+                     logger.d("DT list: $dataTime");
+                     latestTime = dataTime.last;
+                     logger.d("LT: $latestTime");
+                     //finalTime = "2024-2-16/$latestTime";
+
+                     _database.child('$latestDate/$latestTime').onValue.listen((event) {
+                       _liveData = (event.snapshot.value ?? 'No data available').toString();
+                       logger.d("LIVE DATA: $_liveData");
+                       if (_liveData == 'No data available' || _liveData == ''){
+                         setState(() {
+                           loading = false;
+                         });
+                       }
+                       else{
+                         Retrievedata(_liveData);
+                       }
+                     });
+
+
+                   } else {
+                     //make a page that says there are no data retrieved
+                     setState(() {
+                       loading = false;
+                     });
+                     _time = 'No data available';
+                   }
+                 });
+               });
+
+
+               });
+             } else {
+               //make a page that says there are no data retrieved
+               setState(() {
+                 loading = false;
+               });
+               _dates = 'No data available';
+             }
+           });
+
+
+
+
+
+
+          //"2024-2-16/23:59:20"
+
+          //logger.d("FT2: $finalTime");
+         //"2024-2-16/$latestTime"
+
         /*_database = FirebaseDatabase.instance.ref(
             finalID);
          DatabaseReference _database = FirebaseDatabase.instance.ref(
@@ -90,7 +209,7 @@ class DashboardState extends State<Dashboard> {
       }else{
         logger.d("null ang iyong final id beh");
       }
-   }
+    }
   }
 
   Future<void> Retrievedata(String liveData)async{
@@ -100,8 +219,8 @@ class DashboardState extends State<Dashboard> {
     // logger.d("ss: $_liveData");
 
     setState(() {
-      dataVertical = liveData.split(',');
-      _temperature_raw = dataVertical[0];
+      dataFactors = liveData.split(',');
+      _temperature_raw = dataFactors[0];
       if (_temperature_raw.length >= 30) {
         _temperature = _temperature_raw.substring(29).replaceAll(RegExp('}'), '');
         //print(substring); // Outputs: 'ing'
@@ -109,7 +228,7 @@ class DashboardState extends State<Dashboard> {
         logger.d("t: $_temperature_raw");
       }
 
-      _humidity_raw = dataVertical[2];
+      _humidity_raw = dataFactors[2];
       if (_humidity_raw.length >= 34) {
         _humidity = _humidity_raw.substring(33).replaceAll(RegExp('}'), '');
         //print(substring); // Outputs: 'ing'
@@ -117,7 +236,7 @@ class DashboardState extends State<Dashboard> {
         logger.d("h: $_humidity_raw");
       }
 
-      _lightIntensity_raw = dataVertical[1];
+      _lightIntensity_raw = dataFactors[1];
       if (_lightIntensity_raw.length >= 41) {
         _lightIntensity =  double.parse(_lightIntensity_raw.substring(40).replaceAll(RegExp('}'), '')).toStringAsFixed(1);;
         //print(substring); // Outputs: 'ing'
@@ -125,7 +244,7 @@ class DashboardState extends State<Dashboard> {
         logger.d("l: $_lightIntensity_raw");
       }
 
-      _soil_raw = dataVertical[3];
+      _soil_raw = dataFactors[3];
       if (_soil_raw.length >= 30) {
         _soil = _soil_raw.substring(29).replaceAll(RegExp('}'), '');
         //print(substring); // Outputs: 'ing'
@@ -209,7 +328,7 @@ class DashboardState extends State<Dashboard> {
       logger.d("s: $_soil_raw");
     }*/
 
-    if(loading == true){
+    /*if(loading == true){
       return const Scaffold(
         body: Center(
           child: Column(
@@ -243,9 +362,9 @@ class DashboardState extends State<Dashboard> {
           ),
         ),
       );
-    }
+    }*/
 
-    logger.d("length: ${dataVertical.length}");
+    logger.d("length: ${dataFactors.length}");
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -285,7 +404,7 @@ class DashboardState extends State<Dashboard> {
                       textAlign: TextAlign.left,
                     ),
 
-                    Text('Tomato Tornado', style: TextStyle(
+                    Text('$finalID', style: TextStyle(
                       color: Color.fromRGBO(38, 50, 56, 1),
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Inter',
@@ -293,7 +412,7 @@ class DashboardState extends State<Dashboard> {
                     ),
                       textAlign: TextAlign.left,
                     ),
-                    Text('06-11-02', style: TextStyle(
+                    Text('$latestDate', style: TextStyle(
                       color: Color.fromRGBO(38, 50, 56, 1),
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Inter',
@@ -528,7 +647,8 @@ class DashboardState extends State<Dashboard> {
                   ),
                 ],
               ),
-
+                 SizedBox(height: 13,),
+                 StatsOutput(),
             ],
           ),
         ),
@@ -545,40 +665,40 @@ class DashboardState extends State<Dashboard> {
 
   Widget WaterOutput(){
 
-          if (_soil != null) {
-            return Container(
+        //  if (_soil != null) {
+    if (loading == false){
+      return Container(
 
-              child:
-              _soil != null
-                  ? Text(
-                '$_soil',
-                style: TextStyle( fontSize: 35,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w900,
-                  color: Color.fromRGBO(38, 50, 56, 1),),
-              )
-                  : Text('\nNo crop detected\n', style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: Colors.redAccent,
-              ),),
-            );
-        }else {
-            // Handle loading state or if soil value is null
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+        child:
+         _soil != ''
+            ? Text(
+          _soil,
+          style: TextStyle( fontSize: 35,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w900,
+            color: Color.fromRGBO(38, 50, 56, 1),),
+        )
+            : Text('\nNo data\n', style: TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+          color: Colors.redAccent,
+        ),),
+      );
+    }else{
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
 }
 
   Widget TempOutput(){
 
-    if (_temperature != null) {
+    if (loading == false){
       return Container(
 
         child:
-        _temperature != null
+        _temperature != ''
             ? Text(
           '$_temperature°C',
           style: TextStyle( fontSize: 35,
@@ -586,7 +706,7 @@ class DashboardState extends State<Dashboard> {
             fontWeight: FontWeight.w900,
             color: Color.fromRGBO(38, 50, 56, 1),),
         )
-            : Text('\nNo crop detected\n', style: TextStyle(
+            : Text('\nNo data\n', style: TextStyle(
           fontFamily: 'Inter',
           fontSize: 13,
           fontWeight: FontWeight.w500,
@@ -604,11 +724,11 @@ class DashboardState extends State<Dashboard> {
 
 
   Widget lightOutput(){
-    if (_lightIntensity != null) {
+    if (loading == false){
       return Container(
 
         child:
-        _lightIntensity != null
+        _lightIntensity != ''
             ? Text(
           '$_lightIntensity lux',
           style: TextStyle( fontSize: 35,
@@ -616,7 +736,7 @@ class DashboardState extends State<Dashboard> {
             fontWeight: FontWeight.w900,
             color: Color.fromRGBO(38, 50, 56, 1),),
         )
-            : Text('\nNo crop detected\n', style: TextStyle(
+            : Text('\nNo data\n', style: TextStyle(
           fontFamily: 'Inter',
           fontSize: 13,
           fontWeight: FontWeight.w500,
@@ -635,11 +755,11 @@ class DashboardState extends State<Dashboard> {
 
   Widget HumidityOutput(){
 
-    if (_humidity != null) {
+    if (loading == false){
       return Container(
 
         child:
-        _humidity != null
+        _humidity != ''
             ? Text(
           '$_humidity',
           style: TextStyle( fontSize: 35,
@@ -647,7 +767,7 @@ class DashboardState extends State<Dashboard> {
             fontWeight: FontWeight.w900,
             color: Color.fromRGBO(38, 50, 56, 1),),
         )
-            : Text('\nNo crop detected\n', style: TextStyle(
+            : Text('\nNo data\n', style: TextStyle(
           fontFamily: 'Inter',
           fontSize: 13,
           fontWeight: FontWeight.w500,
@@ -661,6 +781,103 @@ class DashboardState extends State<Dashboard> {
       );
     }
   }
+
+
+  Widget StatsOutput(){
+      return Container(
+        height: 220,
+        width: 350,
+          /*decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            //color: Colors.white,
+            color: Color.fromRGBO(230, 230, 230, 1),
+          ),*/
+          child: SfCartesianChart(
+             plotAreaBackgroundColor: Colors.transparent,
+             borderColor: Colors.transparent,
+             borderWidth: 0,
+             plotAreaBorderWidth: 0,
+                    // Initialize category axis
+                      primaryXAxis: CategoryAxis(
+                        axisLine: AxisLine(width: 0),
+                        labelPlacement: LabelPlacement.onTicks,
+                        edgeLabelPlacement: EdgeLabelPlacement.shift,
+                        majorGridLines: MajorGridLines(width: 0),
+                        majorTickLines: MajorTickLines(width: 0),
+                        labelStyle: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),),
+                      primaryYAxis: NumericAxis(
+                        axisLine: AxisLine(width: 0),
+                        majorGridLines: MajorGridLines(width: 1),
+                        majorTickLines: MajorTickLines(width: 0),
+                        labelStyle: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),
+                        minimum: 10,
+                        maximum: 100,
+                        interval: 20,
+                      ),
+
+                      series: <CartesianSeries<CropStatus, String>>[
+                        SplineSeries(
+                          color: Color.fromRGBO(0, 105, 46, 1),
+                            width: 4,
+                            dataSource: Cropchart,
+                            xValueMapper: (CropStatus status, _) => status.year,
+                            yValueMapper: (CropStatus status, _) => status.sales,),
+                        SplineSeries(
+                          dataSource: Cropchart,
+                          xValueMapper: (CropStatus status, _) => status.year,
+                          yValueMapper: (CropStatus status, _) => status.sales,
+                          onCreateShader: (ShaderDetails details){
+                            return ui.Gradient.linear(details.rect.topCenter,
+                                details.rect.bottomCenter, const <Color>[
+                                  Color.fromRGBO(0, 105, 46, 1),
+                                  Color.fromRGBO(0, 105, 46, 1),
+                            ],<double>[
+                              0.4,
+                              0.10,]);
+                            }
+                       /*   gradient: LinearGradient(colors: [
+                            Color.fromRGBO(0, 105, 46, 1).withAlpha(150),
+                            Color.fromRGBO(0, 105, 46, 1).withAlpha(10),
+                          ]*/
+                          )
+
+                      ],
+
+                     tooltipBehavior: _tooltipBehavior,
+                  )
+      );
+    }
+
+    /*return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+      child: SfCartesianChart(
+        primaryXAxis: CategoryAxis(),
+        title: ChartTitle(text: 'Half Yearly Sales Analysis'),
+        legend: Legend(isVisible: true,),
+        tooltipBehavior: TooltipBehavior(enable: true),
+        series: <ChartSeries<SalesData, String>>[
+          LineSeries<SalesData, String>(
+            dataSource: data,
+            xValueMapper: (SalesData sales, _) => sales.month,
+            yValueMapper: (SalesData sales, _) => sales.sales,
+            name: 'Sales',
+            dataLabelSettings: DataLabelSettings(isVisible: true),
+          ),
+        ],
+      ),
+    ),*/
 }
+
+
 
 
