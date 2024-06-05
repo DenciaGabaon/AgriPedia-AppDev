@@ -39,6 +39,12 @@ class CropData {
 
 class Home extends State<MyHomePage> {
 //
+
+  //Database Variables
+  final Logger logger = Logger();
+  String finalID = 'nodemCU-board-tomato';
+
+
   List<CropData> crops = [
     CropData(name: "Crop 1", status: "online", condition: "good"),
     CropData(name: "Crop 2", status: "offline", condition: "bad"),

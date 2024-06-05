@@ -49,9 +49,11 @@ class MyWelcomePage extends StatefulWidget {
 
 
 class _MyWelcomePageState extends State<MyWelcomePage> {
+  final DatabaseReference _database = FirebaseDatabase.instance.reference();
   @override
   void initState() {
     super.initState();
+    _readFromDatabase();
 
     /// whenever your initialization is completed, remove the splash screen:
     Future.delayed(Duration(seconds: 5)).then((value) => {
@@ -106,4 +108,18 @@ class _MyWelcomePageState extends State<MyWelcomePage> {
       ),
     );
   }
+  void _readFromDatabase() {
+    _database.child('nodemCU-board-chili').once().then((DatabaseEvent event) {
+      DataSnapshot snapshot = event.snapshot;
+      if (snapshot.value != null) {
+        print('Data from database: ${snapshot.value}');
+      } else {
+        print('No data found in the database.');
+      }
+    }).catchError((error) {
+      print('Failed to read from database: $error');
+    });
+  }
+
+
 }
