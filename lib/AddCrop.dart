@@ -1,25 +1,22 @@
 import 'dart:typed_data';
-import 'package:agripedia/AnalysisPage.dart';
-import 'package:agripedia/main.dart';
-import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:agripedia/NavigationBar.dart';
+import 'package:logger/logger.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:quickalert/quickalert.dart';
-
+import 'CropData.dart';
+import 'CropManager.dart';
+import 'AnalysisPage.dart';
 
 class AddCrop extends StatefulWidget {
-  const AddCrop({super.key});
+  final CropDataManager cropDataManager; // Passing CropDataManager instance
 
+  const AddCrop({Key? key, required this.cropDataManager}) : super(key: key);
   @override
   State<AddCrop> createState() => AddCropState();
 }
 
 class AddCropState extends State<AddCrop> {
-
-  List<CropData> crops = AnalysisState.crops;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,33 +49,41 @@ class AddCropState extends State<AddCrop> {
             var logger = Logger();
             logger.d("ID: $deviceID");
 
+            // Check if the device ID already exists in CropDataManager
+            if (widget.cropDataManager.getCropList().any((crop) => crop.devID == deviceID)) {
+              logger.d("ID already scanned");
+              Navigator.of(context).pop();
+              QuickAlert.show(
+                context: context,
+                type: QuickAlertType.warning,
+                title: 'Existing ID',
+                text: 'ID is already used',
+              );
+              return;
+            }
+
             DatabaseReference _database = FirebaseDatabase.instance.ref(deviceID);
             try {
               _database.onValue.listen((DatabaseEvent event) {
                 final data = event.snapshot.value;
-                if (data != null){
-                  int index = findIndexByStringID(crops, deviceID!);
-
-                  if (index == -1){
-                    //Means that ID is not found
-                    AnalysisState.addCropData(deviceID!);
-                    Navigator.of(context).pop();
-                  }
-                  else{
-                    logger.d("ID already scanned");
-                    Navigator.of(context).pop();
-                    QuickAlert.show(
-                      context: context,
-                      type: QuickAlertType.warning,
-                      title: 'Existing ID',
-                      text: 'ID is already used',
-                    );
-                  }
-                  //AnalysisState.addCropData(deviceID!);
-
-                }
-                else{
-
+                if (data != null) {
+                  // Create a new CropData instance with the device ID
+                  CropData newCrop = CropData(
+                    devID: deviceID!,
+                    name: '',
+                    // Set other fields as per your requirement
+                    plantedDate: '',
+                    status: '',
+                    condition: '',
+                    temperature: '',
+                    humidity: '',
+                    lightIntensity: '',
+                    soil: '',
+                  );
+                  // Add the new crop to CropDataManager
+                  widget.cropDataManager.addCrop(newCrop);
+                  Navigator.of(context).pop();
+                } else {
                   logger.e("Error reading Realtime Database");
                   Navigator.of(context).pop();
                   QuickAlert.show(
@@ -93,64 +98,9 @@ class AddCropState extends State<AddCrop> {
               logger.e("Error reading to Realtime Database: $e");
               Navigator.of(context).pop();
             }
-
-
-
-
-           /* Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) => MyNavigation(), // Navigate to MyNavigation first
-            )).then((_) {
-              // After navigating to MyNavigation, call setIndex
-              MyNavigation().setIndex(context, 1);
-            });*/
-            //NavigationBar.setIndex(1);
-
-
-
-            //_passer(deviceID!);
-
-
-            //  connectToHardware(Deviceid!);
-            /*showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  //pass id to connectToHardwareDBASE function
-                  //insdide the function, return all the retrieved data
-                  //from the id using streambuilder to add it ti list that
-                  // will hold all the data that will be displayed.
-                  title: Text(
-                    barcodes.first.rawValue ?? "",
-                  ),
-                  content: Image(
-                    image: MemoryImage(image),
-                  ),
-                );
-              },
-            );*/
           }
         },
       ),
     );
   }
 }
-
- /* void _passer(String deviceID) async {
-    var logger = Logger();
-    logger.d("$deviceID");
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (_) => Analysis(deviceID: deviceID),
-    ));
-  }
-}*/
-
-
-
-// Function to connect to hardware using the scanned data
-  void connectToHardware(String deviceId) {
-    // Add your logic here to connect to the hardware device
-    // You can use the deviceId to identify and connect to the corresponding hardware
-  }
-
-
-

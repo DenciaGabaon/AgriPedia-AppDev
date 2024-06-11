@@ -50,6 +50,11 @@ dependencies:
   mobile_scanner: ^4.0.0
   quickalert: ^1.0.2
   syncfusion_flutter_charts: ^25.1.35
+  http: ^1.2.0
+  geocoding: ^2.1.1
+  geolocator: ^11.0.0
+  lottie: ^3.0.0
+  shared_preferences: ^2.2.3
 
 flutter_native_splash:
   color: "000000"
@@ -68,6 +73,12 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  flutter_svg: ^2.0.9
+  flutter_svg_provider: ^1.0.7
+  http: ^1.2.0
+  geocoding: ^2.1.1
+  geolocator: ^11.0.0
+  permission_handler: ^11.3.0
 
 
 
@@ -115,6 +126,14 @@ flutter:
      - assets/Logo-appbar.svg
      - assets/Tomato.png
      - assets/Chili.png
+     - assets/cloudy.json
+     - assets/rainy.json
+     - assets/sunny.json
+     - assets/thunder.json
+     - assets/cloudy.svg
+     - assets/rainy.svg
+     - assets/sunny.svg
+     - assets/thunder.svg
 
 
 

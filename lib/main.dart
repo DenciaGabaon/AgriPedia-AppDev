@@ -4,11 +4,10 @@ import 'NavigationBar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'CropData.dart';
+import 'CropManager.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:logger/logger.dart';
-
-
-
 
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +18,8 @@ Future<void> main() async {
   //await readDataToFirebase('nodemCU-board-tomato/2024-2-17/00:04:28/temp');
   runApp(const AgriPedia());
 }
+
+
 
 //Working [/] - database is connected and working but without streambuilder.
 
@@ -38,24 +39,23 @@ Future<void> readDataToFirebase(String userNum) async {
 
 
 class AgriPedia extends StatelessWidget {
-  const AgriPedia({super.key});
+  const AgriPedia({Key? key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final cropDataManager = CropDataManager(); // Create an instance of CropDataManager
     return MaterialApp(
       title: 'ArtSense Flash Screen',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Montserrat'),
       routes: {
-        '/second': (context) => const MyNavigation(),
-        // '/third': (context) => Camera(),
-        // Define a named route for SecondScreen
+        '/second': (context) =>  MyNavigation(cropDataManager: cropDataManager),
       },
       home: const MyWelcomePage(),
     );
   }
 }
+
 
 
 class MyWelcomePage extends StatefulWidget {

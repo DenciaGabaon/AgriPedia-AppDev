@@ -2,34 +2,40 @@ import 'package:agripedia/AnalysisPage.dart';
 import 'package:agripedia/Dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'CropData.dart';
 import 'test.dart';
 import 'HomePage.dart';
 import 'Cropedia.dart';
+import 'CropManager.dart';
 
 
 
 class MyNavigation extends StatefulWidget {
-  const MyNavigation({Key? key}) : super(key: key);
+
+  final CropDataManager cropDataManager; // Define cropDataManager here
+
+  const MyNavigation({Key? key, required this.cropDataManager}) : super(key: key); // Add semicolon here
 
   @override
-  State<MyNavigation> createState() => NavigationBar();
-
-  /*void setIndex(BuildContext context, int newIndex) {
-    NavigationBar state = context.findAncestorStateOfType<NavigationBar>()!;
-    state.setState(() {
-      state.Myindex = newIndex;
-    });
-  }*/
+  State<MyNavigation> createState() => NavigationBarState();
 }
 
-class NavigationBar extends State<MyNavigation>{
-    int Myindex = 0;
-  List<Widget> widgetList = const [
-    MyHomePage(),
-    Analysis(),
-    CropInfo(),
-    FirebaseDataScreen(),
-  ];
+
+class NavigationBarState extends State<MyNavigation> {
+  int Myindex = 0;
+  late List<Widget> widgetList;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize widget list here
+    widgetList = [
+      MyHomePage(cropDataManager: widget.cropDataManager),
+      Analysis(cropDataManager: widget.cropDataManager),
+      CropInfo(),
+      FirebaseDataScreen(),
+    ];
+  }
 
   /*  void setIndex(int newIndex) {
       setState(() {
