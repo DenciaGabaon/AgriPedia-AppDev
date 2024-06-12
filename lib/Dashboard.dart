@@ -1,19 +1,20 @@
 import 'dart:ffi';
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:logger/logger.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:ui' as ui;
-
-import 'CropData.dart';  // Make sure to import your CropData class
+import 'package:provider/provider.dart';
+import 'CropData.dart';
+import 'CropManager.dart';
 
 class Dashboard extends StatefulWidget {
-  String? id;
-  Dashboard({Key? key, required this.id}) : super(key: key);
+  final String id;
+
+  const Dashboard({Key? key, required this.id}) : super(key: key);
 
   @override
   State<Dashboard> createState() => DashboardState();
@@ -36,9 +37,8 @@ List<CropStatus> Cropchart = [
 
 class DashboardState extends State<Dashboard> {
   final Logger logger = Logger();
-  late String finalID = '';
+  late String finalID;
   late TooltipBehavior _tooltipBehavior;
-  String test = "nodemCU-board-tomato";
   late DatabaseReference _database;
 
   String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -66,8 +66,6 @@ class DashboardState extends State<Dashboard> {
   late String finalTime = '';
   bool loading = true;
 
-  CropData? cropData; // Add a CropData instance variable
-
   @override
   void initState() {
     super.initState();
@@ -77,85 +75,71 @@ class DashboardState extends State<Dashboard> {
       borderWidth: 5,
       color: Colors.lightBlue,
     );
-    if (widget.id != null) {
-      // If ID is passed, no need to show loading
-      logger.d(widget.id);
-      setState(() {
-        finalID = widget.id!;
-      });
+    finalID = widget.id;
+    logger.d("finalid: $finalID");
+    _database = FirebaseDatabase.instance.ref(finalID);
 
-      if (finalID.isNotEmpty) {
-        logger.d("finalid: $finalID");
+    // Retrieving Date
+    _database.onValue.listen((event) {
+      var date = event.snapshot.value;
+      if (date != null && date is Map) {
+        setState(() {
+          var date_raw = date.keys.toList(); // Extracting the time stamps
+          logger.d("Data: $date");
+          logger.d("TS var: $date_raw");
+          date_raw.sort();
+          logger.d("Sorted var: $date_raw");
+          _dates = date_raw.join(', ');
+          logger.d("_dates string: $_dates");
+          dataDate = _dates.split(',').map((_dates) => _dates.trim()).toList();
+          logger.d("DD list: $dataDate");
+          latestDate = dataDate.last;
+          logger.d("LD: $latestDate");
 
-        _database = FirebaseDatabase.instance.ref(finalID);
-
-        //RETRIEVING DATE
-        _database.onValue.listen((event) {
-          var date = event.snapshot.value;
-          if (date != null && date is Map) {
+          // Retrieving Time & Factors
+          _database.child(latestDate).onValue.listen((event) {
             setState(() {
-              var date_raw = date.keys.toList(); // Extracting the time stamps
-              logger.d("Data: $date");
-              logger.d("TS var: $date_raw");
-              date_raw.sort();
-              logger.d("Sorted var: $date_raw");
-              _dates = date_raw.join(', ');
-              logger.d("_dates string: $_dates");
-              dataDate = _dates.split(',').map((_dates) => _dates.trim()).toList();
-              logger.d("DD list: $dataDate");
-              latestDate = dataDate.last;
-              logger.d("LD: $latestDate");
+              var time_raw = event.snapshot.value;
+              if (time_raw != null && time_raw is Map) {
+                var timeStamps = time_raw.keys.toList(); // Extracting the time stamps
+                logger.d("Data: $time_raw");
+                logger.d("TS var: $timeStamps");
+                timeStamps.sort();
+                logger.d("Sorted var: $timeStamps");
+                _time = timeStamps.join(', ');
+                logger.d("_dates string: $_dates");
+                dataTime = _time.split(',').map((_time) => _time.trim()).toList();
+                logger.d("DT list: $dataTime");
+                latestTime = dataTime.last;
+                logger.d("LT: $latestTime");
 
-              //RETRIEVING TIME & FACTORS
-              _database.child(latestDate).onValue.listen((event) {
-                setState(() {
-                  var time_raw = event.snapshot.value;
-                  if (time_raw != null && time_raw is Map) {
-                    var timeStamps = time_raw.keys.toList(); // Extracting the time stamps
-                    logger.d("Data: $time_raw");
-                    logger.d("TS var: $timeStamps");
-                    timeStamps.sort();
-                    logger.d("Sorted var: $timeStamps");
-                    _time = timeStamps.join(', ');
-                    logger.d("_dates string: $_dates");
-                    dataTime = _time.split(',').map((_time) => _time.trim()).toList();
-                    logger.d("DT list: $dataTime");
-                    latestTime = dataTime.last;
-                    logger.d("LT: $latestTime");
-
-                    _database.child('$latestDate/$latestTime').onValue.listen((event) {
-                      _liveData = (event.snapshot.value ?? 'No data available').toString();
-                      logger.d("LIVE DATA: $_liveData");
-                      if (_liveData == 'No data available' || _liveData == '') {
-                        setState(() {
-                          loading = false;
-                        });
-                      } else {
-                        Retrievedata(_liveData);
-                      }
-                    });
-                  } else {
-                    //make a page that says there are no data retrieved
+                _database.child('$latestDate/$latestTime').onValue.listen((event) {
+                  _liveData = (event.snapshot.value ?? 'No data available').toString();
+                  logger.d("LIVE DATA: $_liveData");
+                  if (_liveData == 'No data available' || _liveData == '') {
                     setState(() {
                       loading = false;
                     });
-                    _time = 'No data available';
+                  } else {
+                    Retrievedata(_liveData);
                   }
                 });
-              });
+              } else {
+                setState(() {
+                  loading = false;
+                });
+                _time = 'No data available';
+              }
             });
-          } else {
-            //make a page that says there are no data retrieved
-            setState(() {
-              loading = false;
-            });
-            _dates = 'No data available';
-          }
+          });
         });
       } else {
-        logger.d("null ang iyong final id beh");
+        setState(() {
+          loading = false;
+        });
+        _dates = 'No data available';
       }
-    }
+    });
   }
 
   Future<void> Retrievedata(String liveData) async {
@@ -179,13 +163,10 @@ class DashboardState extends State<Dashboard> {
         _lightIntensity = dataMap['light_intensity'] ?? 'N/A';
         _soil = dataMap['soil'] ?? 'N/A';
 
-        // Create a CropData instance
-        cropData = CropData(
-          devID: finalID,
-          name: '', // Replace with actual crop name
-          plantedDate: '', // Use the current date for example
-          status: '', // Replace with actual status
-          condition: '', // Replace with actual condition
+        final cropDataManager = context.read<CropDataManager>();
+
+        cropDataManager.updateCropData(
+          finalID,
           temperature: _temperature,
           humidity: _humidity,
           lightIntensity: _lightIntensity,
@@ -193,7 +174,7 @@ class DashboardState extends State<Dashboard> {
         );
 
         // Log the CropData object
-        logger.d("CropData: ${cropData!.toJson()}");
+        logger.d("CropData: ${cropDataManager.findCropByID(finalID).toJson()}");
 
         // Update the loading state
         loading = false;
@@ -223,10 +204,9 @@ class DashboardState extends State<Dashboard> {
         ),
         centerTitle: false,
         automaticallyImplyLeading: true,
-        backgroundColor: Color.fromRGBO(246, 245, 245, 1),
+        backgroundColor: const Color.fromRGBO(246, 245, 245, 1),
       ),
       body: SafeArea(
-        // SafeArea yung visible part ng screen.
         child: Container(
           width: double.infinity,
           color: const Color.fromRGBO(246, 245, 245, 1),
@@ -234,11 +214,11 @@ class DashboardState extends State<Dashboard> {
           child: Column(
             children: [
               Container(
-                alignment: Alignment(-0.8, 0.0),
+                alignment: const Alignment(-0.8, 0.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Dashboard',
                       style: TextStyle(
                         color: Color.fromRGBO(38, 50, 56, 1),
@@ -249,8 +229,8 @@ class DashboardState extends State<Dashboard> {
                       textAlign: TextAlign.left,
                     ),
                     Text(
-                      '$finalID',
-                      style: TextStyle(
+                      finalID,
+                      style: const TextStyle(
                         color: Color.fromRGBO(38, 50, 56, 1),
                         fontWeight: FontWeight.w400,
                         fontFamily: 'Inter',
@@ -259,8 +239,8 @@ class DashboardState extends State<Dashboard> {
                       textAlign: TextAlign.left,
                     ),
                     Text(
-                      '$latestDate',
-                      style: TextStyle(
+                      latestDate,
+                      style: const TextStyle(
                         color: Color.fromRGBO(38, 50, 56, 1),
                         fontWeight: FontWeight.w400,
                         fontFamily: 'Inter',
@@ -271,265 +251,49 @@ class DashboardState extends State<Dashboard> {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    height: 185,
-                    width: 165,
-                    color: Color.fromRGBO(246, 245, 245, 1),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
-                          child: Container(
-                            height: 165,
-                            width: 165,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Color.fromRGBO(187, 222, 251, 100),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          child: Center(
-                            child: Container(
-                              height: 65,
-                              width: 65,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color.fromRGBO(30, 136, 229, 1),
-                              ),
-                              child: Image.asset(
-                                'assets/Analysis-water.png',
-                                height: 50,
-                                width: 44,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 80,
-                          right: 0,
-                          left: 0,
-                          child: Column(
-                            children: [
-                              WaterOutput(),
-                              Text(
-                                'Water',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'Inter',
-                                  color: Color.fromRGBO(38, 50, 56, 1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                  FactorWidget(
+                    title: 'Water',
+                    icon: 'assets/Analysis-water.png',
+                    color: const Color.fromRGBO(30, 136, 229, 1),
+                    value: _soil,
+                    loading: loading,
                   ),
-                  SizedBox(width: 13),
-                  Container(
-                    height: 185,
-                    width: 165,
-                    color: Color.fromRGBO(246, 245, 245, 1),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
-                          child: Container(
-                            height: 165,
-                            width: 165,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Color.fromRGBO(224, 22, 22, .15),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          child: Center(
-                            child: Container(
-                              height: 65,
-                              width: 65,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color.fromRGBO(224, 22, 22, 1),
-                              ),
-                              child: Image.asset(
-                                'assets/Analysis-temp.png',
-                                height: 50,
-                                width: 44,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 80,
-                          right: 0,
-                          left: 0,
-                          child: Column(
-                            children: [
-                              TempOutput(),
-                              Text(
-                                'Temperature',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'Inter',
-                                  color: Color.fromRGBO(38, 50, 56, 1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                  const SizedBox(width: 13),
+                  FactorWidget(
+                    title: 'Temperature',
+                    icon: 'assets/Analysis-temp.png',
+                    color: const Color.fromRGBO(224, 22, 22, 1),
+                    value: _temperature,
+                    loading: loading,
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    height: 185,
-                    width: 165,
-                    color: Color.fromRGBO(246, 245, 245, 1),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
-                          child: Container(
-                            height: 165,
-                            width: 165,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Color.fromRGBO(224, 185, 52, 160),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          child: Center(
-                            child: Container(
-                              height: 65,
-                              width: 65,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color.fromRGBO(253, 192, 55, 1),
-                              ),
-                              child: Image.asset(
-                                'assets/Analysis-sun.png',
-                                height: 50,
-                                width: 44,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 80,
-                          right: 0,
-                          left: 0,
-                          child: Column(
-                            children: [
-                              lightOutput(),
-                              Text(
-                                'light',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'Inter',
-                                  color: Color.fromRGBO(38, 50, 56, 1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                  FactorWidget(
+                    title: 'Light',
+                    icon: 'assets/Analysis-sun.png',
+                    color: const Color.fromRGBO(253, 192, 55, 1),
+                    value: _lightIntensity,
+                    loading: loading,
                   ),
-                  SizedBox(width: 13),
-                  Container(
-                    height: 185,
-                    width: 165,
-                    color: Color.fromRGBO(246, 245, 245, 1),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
-                          child: Container(
-                            height: 165,
-                            width: 165,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Color.fromRGBO(212, 252, 121, 100),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          child: Center(
-                            child: Container(
-                              height: 65,
-                              width: 65,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color.fromRGBO(0, 105, 46, 1),
-                              ),
-                              child: Image.asset(
-                                'assets/Analysis-humid.png',
-                                height: 50,
-                                width: 44,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 80,
-                          right: 0,
-                          left: 0,
-                          child: Column(
-                            children: [
-                              HumidityOutput(),
-                              Text(
-                                'Humidity',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'Inter',
-                                  color: Color.fromRGBO(38, 50, 56, 1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                  const SizedBox(width: 13),
+                  FactorWidget(
+                    title: 'Humidity',
+                    icon: 'assets/Analysis-humid.png',
+                    color: const Color.fromRGBO(0, 105, 46, 1),
+                    value: _humidity,
+                    loading: loading,
                   ),
                 ],
               ),
-              SizedBox(height: 13),
+              const SizedBox(height: 13),
               StatsOutput(),
             ],
           ),
@@ -538,124 +302,85 @@ class DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget WaterOutput() {
-    if (loading == false) {
-      return Container(
-        child: _soil != ''
-            ? Text(
-          _soil,
-          style: TextStyle(
-            fontSize: 35,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w900,
-            color: Color.fromRGBO(38, 50, 56, 1),
+  Widget FactorWidget({
+    required String title,
+    required String icon,
+    required Color color,
+    required String value,
+    required bool loading,
+  }) {
+    return Container(
+      height: 185,
+      width: 165,
+      color: const Color.fromRGBO(246, 245, 245, 1),
+      child: Stack(
+        children: [
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 165,
+              width: 165,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: color.withOpacity(0.15),
+              ),
+            ),
           ),
-        )
-            : Text(
-          '\nNo data\n',
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: Colors.redAccent,
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                height: 65,
+                width: 65,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color,
+                ),
+                child: Image.asset(
+                  icon,
+                  height: 50,
+                  width: 44,
+                ),
+              ),
+            ),
           ),
-        ),
-      );
-    } else {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-  }
-
-  Widget TempOutput() {
-    if (loading == false) {
-      return Container(
-        child: _temperature != ''
-            ? Text(
-          '$_temperature°C',
-          style: TextStyle(
-            fontSize: 35,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w900,
-            color: Color.fromRGBO(38, 50, 56, 1),
+          Positioned(
+            top: 80,
+            right: 0,
+            left: 0,
+            child: Column(
+              children: [
+                if (loading)
+                  const Center(child: CircularProgressIndicator())
+                else
+                  Text(
+                    value != '' ? value : 'No data',
+                    style: TextStyle(
+                      fontSize: value != '' ? 35 : 13,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w900,
+                      color: const Color.fromRGBO(38, 50, 56, 1),
+                    ),
+                  ),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Inter',
+                    color: Color.fromRGBO(38, 50, 56, 1),
+                  ),
+                ),
+              ],
+            ),
           ),
-        )
-            : Text(
-          '\nNo data\n',
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: Colors.redAccent,
-          ),
-        ),
-      );
-    } else {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-  }
-
-  Widget lightOutput() {
-    if (loading == false) {
-      return Container(
-        child: _lightIntensity != ''
-            ? Text(
-          '$_lightIntensity lux',
-          style: TextStyle(
-            fontSize: 35,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w900,
-            color: Color.fromRGBO(38, 50, 56, 1),
-          ),
-        )
-            : Text(
-          '\nNo data\n',
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: Colors.redAccent,
-          ),
-        ),
-      );
-    } else {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-  }
-
-  Widget HumidityOutput() {
-    if (loading == false) {
-      return Container(
-        child: _humidity != ''
-            ? Text(
-          _humidity,
-          style: TextStyle(
-            fontSize: 35,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w900,
-            color: Color.fromRGBO(38, 50, 56, 1),
-          ),
-        )
-            : Text(
-          '\nNo data\n',
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: Colors.redAccent,
-          ),
-        ),
-      );
-    } else {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
+        ],
+      ),
+    );
   }
 
   Widget StatsOutput() {
@@ -667,14 +392,13 @@ class DashboardState extends State<Dashboard> {
         borderColor: Colors.transparent,
         borderWidth: 0,
         plotAreaBorderWidth: 0,
-        // Initialize category axis
         primaryXAxis: CategoryAxis(
           axisLine: AxisLine(width: 0),
           labelPlacement: LabelPlacement.onTicks,
           edgeLabelPlacement: EdgeLabelPlacement.shift,
           majorGridLines: MajorGridLines(width: 0),
           majorTickLines: MajorTickLines(width: 0),
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
             fontFamily: 'Inter',
             fontSize: 12,
             fontWeight: FontWeight.w500,
@@ -685,7 +409,7 @@ class DashboardState extends State<Dashboard> {
           axisLine: AxisLine(width: 0),
           majorGridLines: MajorGridLines(width: 1),
           majorTickLines: MajorTickLines(width: 0),
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
             fontFamily: 'Inter',
             fontSize: 12,
             fontWeight: FontWeight.w500,
@@ -697,7 +421,7 @@ class DashboardState extends State<Dashboard> {
         ),
         series: <CartesianSeries<CropStatus, String>>[
           SplineSeries(
-            color: Color.fromRGBO(0, 105, 46, 1),
+            color: const Color.fromRGBO(0, 105, 46, 1),
             width: 4,
             dataSource: Cropchart,
             xValueMapper: (CropStatus status, _) => status.year,

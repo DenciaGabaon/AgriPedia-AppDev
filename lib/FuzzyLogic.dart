@@ -1,101 +1,81 @@
-// import 'dart:ffi';
-// import 'dart:async';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_svg/svg.dart';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_database/firebase_database.dart';
+// import 'CropData.dart';
 // import 'package:logger/logger.dart';
-// import 'package:intl/intl.dart';
-// import 'package:syncfusion_flutter_charts/charts.dart';
-// import 'dart:ui' as ui;
 //
-// class FuzzyLogic extends StatefulWidget{
-//   String? id;
-//   FuzzyLogic({Key? key, required this.id}) : super(key: key);
-//
-//   @override
-//   State<FuzzyLogic> createState() => FuzzyLogicState();
-// }
-//
-// class FuzzyLogicState extends State<FuzzyLogic>{
+// class FuzzyLogic {
+//   CropData cropData;
 //   final Logger logger = Logger();
-//   late String finalID = '';
-//   String test = "nodemCU-board-tomato";
-//   late DatabaseReference _database;
+//   double temperature = 0.0;
+//   double soil = 0.0;
+//   double light = 0.0;
+//   double humidity = 0.0;
 //
-//   late String _liveData = '';
+//   FuzzyLogic(this.cropData);
 //
-//   late List<String> dataFactors = [];
+//   String evaluateCropData() {
+//     double temperature = double.tryParse(cropData.temperature) ?? 0.0;
+//     double soil = double.tryParse(cropData.soil) ?? 0.0;
+//     double light = double.tryParse(cropData.lightIntensity) ?? 0.0;
+//     double humidity = double.tryParse(cropData.humidity) ?? 0.0;
 //
-//   late String _temperature = '';
-//   late String _temperature_raw = '';
-//   late String _humidity_raw = '';
-//   late String _humidity = '';
-//   late String _soil_raw = '';
-//   late String _soil = '';
-//   late String _lightIntensity_raw = '';
-//   late String _lightIntensity = '';
+//     // check if the values are retrieved
 //
-//   @override
-//   void initState(){
-//     if (widget.id != null){
-//       logger.d("fuzzy ID: ${widget.id}");
-//       setState(() {
-//         finalID = widget.id!;
-//       });
+//     print("Fuzzy temp: ${cropData.temperature}");
+//     print("Fuzzy water: ${cropData.soil}");
+//     print("Fuzzy light: ${cropData.lightIntensity}");
+//     print("Fuzzy humidity: ${cropData.humidity}");
 //
-//       if (finalID.isNotEmpty){
-//         logger.d("fuzzy Final ID: $finalID");
+//     // if (temperature < 60) {
+//     //   cropData.condition = 'good';
+//     //   return '${cropData.name} needs heating';
+//     // }
+//     // return 'Nothing to do for now';
+//   }
 //
-//         _database = FirebaseDatabase.instance.ref(finalID);
+//   String getCondition(){
+//     double temperature = double.tryParse(cropData.temperature) ?? 0.0;
+//     double soil = double.tryParse(cropData.soil) ?? 0.0;
+//     double light = double.tryParse(cropData.lightIntensity) ?? 0.0;
+//     double humidity = double.tryParse(cropData.humidity) ?? 0.0;
+//
+//
+//   }
+//
+//   String getFactors(String factor, soil, temperature, light, humidity){
+//     if (factor == 'soil_moisture'){
+//       if (soil < 30){
+//         return 'low';
+//       }else if (30 <= soil && soil <= 50){
+//         return 'below_average';
+//       }else if (50 <= soil && soil <= 70){
+//         return 'average';
+//       }else if (70 <= soil && soil <=90){
+//         return 'above_average';
+//       }else{
+//         return 'high';
 //       }
-//       else{
-//         logger.d("FINAL ID IS NULL");
+//     }else if (factor == 'temperature'){
+//       if (temperature < 20){
+//         return 'low';
+//       }else if (30 <= temperature && temperature <= 40){
+//         return 'below_average';
+//       }else if (40 <= temperature && temperature <= 70){
+//         return 'average';
+//       }else if (70 <= temperature && temperature <= 80){
+//         return 'above_average';
+//     }else{
+//         return 'high';
+//       }
+//   }else if (factor == 'light'){
+//       if (light < 50){
+//         return 'low';
+//       }else if (50 <= light && light <=100){
+//         return 'average';
+//       }else{
+//         return 'high';
 //       }
 //     }
-//   }
-//
-//   Future<void> RetrieveFuzzyData(String liveData) async{
-//
-//     setState(() {
-//       dataFactors = liveData.split(",");
-//       _temperature_raw = dataFactors[0];
-//       if (_temperature_raw.length >= 30){
-//         _temperature = _temperature_raw.substring(29).replaceAll(RegExp('}'), '');
-//       }
-//       else{
-//         logger.d("fuzzyTemperature: $_temperature_raw");
-//       }
-//
-//       _humidity_raw = dataFactors[2];
-//       if (_humidity_raw.length >= 34) {
-//         _humidity = _humidity_raw.substring(33).replaceAll(RegExp('}'), '');
-//         //print(substring); // Outputs: 'ing'
-//       } else {
-//         logger.d("fuzzyHumidity: $_humidity_raw");
-//       }
-//
-//       _lightIntensity_raw = dataFactors[1];
-//       if (_lightIntensity_raw.length >= 41) {
-//         _lightIntensity =  double.parse(_lightIntensity_raw.substring(40).replaceAll(RegExp('}'), '')).toStringAsFixed(1);;
-//         //print(substring); // Outputs: 'ing'
-//       } else {
-//         logger.d("fuzzyLightIntensity: $_lightIntensity_raw");
-//       }
-//
-//       _soil_raw = dataFactors[3];
-//       if (_soil_raw.length >= 30) {
-//         _soil = _soil_raw.substring(29).replaceAll(RegExp('}'), '');
-//         //print(substring); // Outputs: 'ing'
-//       } else {
-//         logger.d("fuzzy Soil: $_soil_raw");
-//       }
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context){
-//     return
-//         Container()
-//   }
+//     return '';
 // }
+//
+//
+//   }

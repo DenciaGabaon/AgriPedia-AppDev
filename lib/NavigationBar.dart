@@ -11,14 +11,13 @@ import 'CropManager.dart';
 
 
 class MyNavigation extends StatefulWidget {
-
-  final CropDataManager cropDataManager; // Define cropDataManager here
-
-  const MyNavigation({Key? key, required this.cropDataManager}) : super(key: key); // Add semicolon here
+  const MyNavigation({Key? key}) : super(key: key);
 
   @override
   State<MyNavigation> createState() => NavigationBarState();
 }
+
+
 
 
 class NavigationBarState extends State<MyNavigation> {
@@ -30,8 +29,8 @@ class NavigationBarState extends State<MyNavigation> {
     super.initState();
     // Initialize widget list here
     widgetList = [
-      MyHomePage(cropDataManager: widget.cropDataManager),
-      Analysis(cropDataManager: widget.cropDataManager),
+      MyHomePage(),
+      Analysis(),
       CropInfo(),
       FirebaseDataScreen(),
     ];

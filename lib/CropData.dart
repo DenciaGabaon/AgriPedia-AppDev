@@ -31,6 +31,7 @@ class CropData {
       'name': name,
       'plantedDate': plantedDate,
       'status': status,
+      'condition': condition,
       'temperature': temperature,
       'humidity': humidity,
       'lightIntensity': lightIntensity,
@@ -58,4 +59,10 @@ class CropData {
 
   // Convert a JSON string into a CropData object.
   factory CropData.fromJson(String source) => CropData.fromMap(jsonDecode(source));
+
+  // Override toString method
+  @override
+  String toString() {
+    return 'CropData(devID: $devID, name: $name, plantedDate: $plantedDate, status: $status, condition: $condition, temperature: $temperature, humidity: $humidity, lightIntensity: $lightIntensity, soil: $soil)';
+  }
 }

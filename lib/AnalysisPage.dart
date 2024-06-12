@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 import 'CropData.dart';
 import 'CropManager.dart';
 import 'Dashboard.dart';
@@ -10,49 +10,25 @@ String name = ''; // Initialize variables to hold the edited values
 String date = '';
 
 class Analysis extends StatefulWidget {
-  final CropDataManager cropDataManager;
-  const Analysis({Key? key, required this.cropDataManager}) : super(key: key);
+  const Analysis({Key? key}) : super(key: key);
 
   @override
   State<Analysis> createState() => AnalysisState();
 }
 
-int findIndexByStringID(List<CropData> crops, String id) {
-  for (int i = 0; i < crops.length; i++) {
-    if (crops[i].devID == id) {
-      return i;
-    }
-  }
-  return -1; // ID not found
-}
-
 class AnalysisState extends State<Analysis> {
-  late CropDataManager cropDataManager;
-  late List<CropData> crops;
+  var logger = Logger();
 
-  @override
-  void initState() {
-    super.initState();
-    cropDataManager = widget.cropDataManager;
-    crops = cropDataManager.getCropList();
-    _loadCrops();
-  }
-
-  Future<void> _loadCrops() async {
-    await cropDataManager.loadCrops();
-    setState(() {
-      crops = cropDataManager.getCropList();
-    });
-  }
-
-  Future<void> _saveCrops() async {
-    await cropDataManager.saveCrops(crops);
+  Future<void> _saveCrops(CropDataManager cropDataManager) async {
+    await cropDataManager.saveCrops();
   }
 
   @override
   Widget build(BuildContext context) {
+    final cropDataManager = context.watch<CropDataManager>(); // Access CropDataManager from context
+    final crops = cropDataManager.getCropList();
     Size screenSize = MediaQuery.of(context).size;
-    var logger = Logger();
+
     logger.d(screenSize.height);
 
     return Scaffold(
@@ -77,11 +53,11 @@ class AnalysisState extends State<Analysis> {
         child: Column(
           children: [
             Align(
-              alignment: Alignment(-0.8, 0.0),
+              alignment: const Alignment(-0.8, 0.0),
               child: Text(
                 'Live Analysis',
                 style: TextStyle(
-                  color: Color.fromRGBO(38, 50, 56, 1),
+                  color: const Color.fromRGBO(38, 50, 56, 1),
                   fontWeight: FontWeight.w900,
                   fontFamily: 'Inter',
                   fontSize: 25,
@@ -117,7 +93,7 @@ class AnalysisState extends State<Analysis> {
                         return Column(
                           children: [
                             const Padding(padding: EdgeInsets.all(5.0)),
-                            CropList(crop),
+                            CropList(crop, cropDataManager),
                           ],
                         );
                       }).toList(),
@@ -132,8 +108,9 @@ class AnalysisState extends State<Analysis> {
     );
   }
 
-  Widget CropList(CropData crop) {
+  Widget CropList(CropData crop, CropDataManager cropDataManager) {
     String? imagePath = path(crop.devID);
+
     return Container(
       padding: EdgeInsets.only(left: 20, right: 20),
       decoration: BoxDecoration(
@@ -191,50 +168,46 @@ class AnalysisState extends State<Analysis> {
             ),
           ),
           Container(
-              margin: EdgeInsets.only(bottom: 20),
-              alignment: Alignment.bottomRight,
-              child:Row(
-                  children:[
-                    InkWell(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Popupedit(context, crop.devID);
-                          },
-                        );
+            margin: EdgeInsets.only(bottom: 20),
+            alignment: Alignment.bottomRight,
+            child: Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Popupedit(context, crop.devID, cropDataManager);
                       },
-                      child: SvgPicture.asset(
-                        'assets/Analysis-edit.svg',
-                        width: 16,
-                        height: 16,
-                      ),
-                    ),
-                    SizedBox(width: 10,),
-                    InkWell(
-                      onTap: () {
-                        var logger = Logger();
-                        logger.d(crops);
+                    );
+                  },
+                  child: SvgPicture.asset(
+                    'assets/Analysis-edit.svg',
+                    width: 16,
+                    height: 16,
+                  ),
+                ),
+                SizedBox(width: 10),
+                InkWell(
+                  onTap: () {
 
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Popuptrash(crop.devID);
-                          },
-                        );
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Popuptrash(crop.devID, cropDataManager);
                       },
-
-                      child: SvgPicture.asset(
-                        'assets/Analysis-trash.svg',
-                        width: 16,
-                        height: 16,
-                      ),
-                    ),
-
-                  ]
-              )
-          )
-
+                    );
+                  },
+                  child: SvgPicture.asset(
+                    'assets/Analysis-trash.svg',
+                    width: 16,
+                    height: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -253,20 +226,17 @@ class AnalysisState extends State<Analysis> {
     return null;
   }
 
-  Widget Popuptrash(String id) {
+  Widget Popuptrash(String id, CropDataManager cropDataManager) {
     return AlertDialog(
       title: Text('Delete Confirmation'),
       content: Text('Are you sure you want to delete this item?'),
       actions: <Widget>[
         TextButton(
           onPressed: () {
-            int index = findIndexByStringID(crops, id);
-            if (index != -1) {
-              setState(() {
-                crops.removeAt(index);
-                _saveCrops();
-              });
-            }
+            setState(() {
+              cropDataManager.removeCrop(id);
+              _saveCrops(cropDataManager);
+            });
             Navigator.of(context).pop(); // Close the dialog and return true
           },
           child: Text('Yes'),
@@ -281,7 +251,7 @@ class AnalysisState extends State<Analysis> {
     );
   }
 
-  Widget Popupedit(BuildContext context, String id) {
+  Widget Popupedit(BuildContext context, String id, CropDataManager cropDataManager) {
     return AlertDialog(
       title: Text('Edit Crop Details'),
       content: Column(
@@ -330,23 +300,10 @@ class AnalysisState extends State<Analysis> {
       actions: [
         ElevatedButton(
           onPressed: () {
-            int index = findIndexByStringID(crops, id);
-            if (index != -1) {
-              setState(() {
-                crops[index] = CropData(
-                  devID: id,
-                  name: name,
-                  plantedDate: date,
-                  status: crops[index].status,
-                  condition: crops[index].condition,
-                  temperature: crops[index].temperature,
-                  humidity: crops[index].humidity,
-                  lightIntensity: crops[index].lightIntensity,
-                  soil: crops[index].soil,
-                );
-                _saveCrops();
-              });
-            }
+            setState(() {
+              cropDataManager.updateCropData(id, name: name, plantedDate: date);
+              _saveCrops(cropDataManager);
+            });
             Navigator.of(context).pop(); // Close the dialog
           },
           child: Text('Save'),

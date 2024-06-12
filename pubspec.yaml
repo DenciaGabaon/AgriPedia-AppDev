@@ -55,6 +55,7 @@ dependencies:
   geolocator: ^11.0.0
   lottie: ^3.0.0
   shared_preferences: ^2.2.3
+  provider: ^6.1.2
 
 flutter_native_splash:
   color: "000000"
@@ -79,6 +80,7 @@ dev_dependencies:
   geocoding: ^2.1.1
   geolocator: ^11.0.0
   permission_handler: ^11.3.0
+
 
 
 
