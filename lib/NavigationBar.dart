@@ -3,7 +3,6 @@ import 'package:agripedia/Dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'CropData.dart';
-import 'test.dart';
 import 'HomePage.dart';
 import 'Cropedia.dart';
 import 'CropManager.dart';
@@ -32,7 +31,6 @@ class NavigationBarState extends State<MyNavigation> {
       MyHomePage(),
       Analysis(),
       CropInfo(),
-      FirebaseDataScreen(),
     ];
   }
 

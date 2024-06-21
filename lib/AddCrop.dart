@@ -73,8 +73,6 @@ class AddCropState extends State<AddCrop> {
                       name: '',
                       // Set other fields as per your requirement
                       plantedDate: '',
-                      status: '',
-                      condition: '',
                       temperature: '',
                       humidity: '',
                       lightIntensity: '',

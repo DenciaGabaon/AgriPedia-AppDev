@@ -56,12 +56,7 @@ dependencies:
   lottie: ^3.0.0
   shared_preferences: ^2.2.3
   provider: ^6.1.2
-
-flutter_native_splash:
-  color: "000000"
-  image: "assets/logo.png"
-  android: true
-  ios: true
+  flutter_local_notifications: ^17.1.2
 
 
 dev_dependencies:
@@ -80,8 +75,18 @@ dev_dependencies:
   geocoding: ^2.1.1
   geolocator: ^11.0.0
   permission_handler: ^11.3.0
+  flutter_launcher_icons: ^0.13.1
 
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/logo.png"
 
+flutter_native_splash:
+  color: "000000"
+  image: "assets/logo.png"
+  android: true
+  ios: true
 
 
 

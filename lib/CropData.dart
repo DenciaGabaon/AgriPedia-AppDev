@@ -5,9 +5,7 @@ class CropData {
   String devID;
   String name;
   String plantedDate;
-  String status;
-  String condition;
-  String temperature;
+   String temperature;
   String humidity;
   String lightIntensity;
   String soil;
@@ -16,8 +14,6 @@ class CropData {
     required this.devID,
     required this.name,
     required this.plantedDate,
-    required this.status,
-    required this.condition,
     required this.temperature,
     required this.humidity,
     required this.lightIntensity,
@@ -30,9 +26,7 @@ class CropData {
       'devID': devID,
       'name': name,
       'plantedDate': plantedDate,
-      'status': status,
-      'condition': condition,
-      'temperature': temperature,
+       'temperature': temperature,
       'humidity': humidity,
       'lightIntensity': lightIntensity,
       'soil': soil,
@@ -45,8 +39,6 @@ class CropData {
       devID: map['devID'],
       name: map['name'],
       plantedDate: map['plantedDate'],
-      status: map['status'],
-      condition: map['condition'],
       temperature: map['temperature'],
       humidity: map['humidity'],
       lightIntensity: map['lightIntensity'],
@@ -63,6 +55,6 @@ class CropData {
   // Override toString method
   @override
   String toString() {
-    return 'CropData(devID: $devID, name: $name, plantedDate: $plantedDate, status: $status, condition: $condition, temperature: $temperature, humidity: $humidity, lightIntensity: $lightIntensity, soil: $soil)';
+    return 'CropData(devID: $devID, name: $name, plantedDate: $plantedDate, temperature: $temperature, humidity: $humidity, lightIntensity: $lightIntensity, soil: $soil)';
   }
 }

@@ -73,7 +73,7 @@ class _WeatherPageState extends State<WeatherPage>{
     return
       Container(
         decoration: BoxDecoration(
-          color: Color(0xFFC1F2B0),
+          color: const Color.fromRGBO(230, 242, 214, 1),
           borderRadius: BorderRadius.circular(20.0),
           boxShadow: [
             BoxShadow(
@@ -84,9 +84,11 @@ class _WeatherPageState extends State<WeatherPage>{
             ),
           ],
         ),
-        width: 400,
+        width: 370,
         height: 180,
+        padding: EdgeInsets.only(left: 20, right: 20),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Expanded(
               flex: 1,
@@ -97,18 +99,19 @@ class _WeatherPageState extends State<WeatherPage>{
                   Text(
                     _weather?.mainCondition ?? "",
                     style: TextStyle(
-                      fontSize: 20,
-                      fontFamily: 'Lato',
-                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal,
+                      fontFamily: 'Inter',
+                      color: const Color.fromRGBO(38, 50, 56, 1),
                     ),
                   ),
                   Text(
                     'Today, $formattedDate',
                     style: TextStyle(
-                      fontSize: 20,
-                      fontFamily: 'Lato',
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal,
+                      fontFamily: 'Inter',
+                      color: const Color.fromRGBO(38, 50, 56, 1),
                     ),
                   ),
                 ],
@@ -122,18 +125,19 @@ class _WeatherPageState extends State<WeatherPage>{
                   Text(
                     '${_weather?.temperature.round()}°C',
                     style: TextStyle(
-                      fontSize: 60,
-                      fontWeight: FontWeight.w900,
-                      fontFamily: 'Lato',
+                      fontSize: 50,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Inter',
+                      color: const Color.fromRGBO(38, 50, 56, 1),
                     ),
                   ),
                   Text(
                     _weather?.cityName ?? "Loading City...",
                     style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'Lato',
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal,
+                      fontFamily: 'Inter',
+                      color: const Color.fromRGBO(38, 50, 56, 1),
                     ),
                   ),
                 ],

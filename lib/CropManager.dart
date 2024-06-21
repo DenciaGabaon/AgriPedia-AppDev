@@ -8,14 +8,14 @@ class CropDataManager extends ChangeNotifier {
   List<CropData> cropList = [];
   final Logger logger = Logger();
 
-  CropDataManager() {
-    _init();
-  }
-
-  Future<void> _init() async {
-    await loadCrops();
-    _initializeFirebaseListeners();
-  }
+  // CropDataManager() {
+  //   _init();
+  // }
+  //
+  // Future<void> _init() async {
+  //   await loadCrops();
+  //   //_initializeFirebaseListeners();
+  // }
 
   void _initializeFirebaseListeners() {
     for (var crop in cropList) {
@@ -70,10 +70,6 @@ class CropDataManager extends ChangeNotifier {
 
       updateCropData(
         cropID,
-        name: '',
-        plantedDate: '',
-        status: '',
-        condition: '',
         temperature: temperature,
         humidity: humidity,
         lightIntensity: lightIntensity,
@@ -93,8 +89,6 @@ class CropDataManager extends ChangeNotifier {
         devID: '',
         name: '',
         plantedDate: '',
-        status: '',
-        condition: '',
         temperature: '',
         humidity: '',
         lightIntensity: '',
@@ -108,8 +102,6 @@ class CropDataManager extends ChangeNotifier {
     if (cropToUpdate.devID.isNotEmpty) {
       cropToUpdate.name = name ?? cropToUpdate.name;
       cropToUpdate.plantedDate = plantedDate ?? cropToUpdate.plantedDate;
-      cropToUpdate.status = status ?? cropToUpdate.status;
-      cropToUpdate.condition = condition ?? cropToUpdate.condition;
       cropToUpdate.temperature = temperature ?? cropToUpdate.temperature;
       cropToUpdate.humidity = humidity ?? cropToUpdate.humidity;
       cropToUpdate.lightIntensity = lightIntensity ?? cropToUpdate.lightIntensity;

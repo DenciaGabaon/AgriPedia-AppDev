@@ -301,8 +301,9 @@ class AnalysisState extends State<Analysis> {
         ElevatedButton(
           onPressed: () {
             setState(() {
-              cropDataManager.updateCropData(id, name: name, plantedDate: date);
-              _saveCrops(cropDataManager);
+              final cropDataManager = context.read<CropDataManager>();
+              cropDataManager.updateCropData(id, name: name, plantedDate: date , );
+              //_saveCrops(cropDataManager);
             });
             Navigator.of(context).pop(); // Close the dialog
           },
